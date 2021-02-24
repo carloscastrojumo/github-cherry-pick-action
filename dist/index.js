@@ -46,18 +46,14 @@ function createPullRequest(inputs, prBranch) {
         if (process.env.GITHUB_REPOSITORY !== undefined) {
             const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
             // Get PR title
-            const title = inputs.title
-                ? inputs.title
-                : github.context.payload &&
-                    github.context.payload.pull_request &&
-                    github.context.payload.pull_request.title;
+            const title = github.context.payload &&
+                github.context.payload.pull_request &&
+                github.context.payload.pull_request.title;
             core.info(`Using body '${title}'`);
             // Get PR body
-            const body = inputs.body
-                ? inputs.body
-                : github.context.payload &&
-                    github.context.payload.pull_request &&
-                    github.context.payload.pull_request.body;
+            const body = github.context.payload &&
+                github.context.payload.pull_request &&
+                github.context.payload.pull_request.body;
             core.info(`Using body '${body}'`);
             // Create PR
             const pull = yield octokit.pulls.create({
@@ -177,12 +173,9 @@ function run() {
         try {
             const inputs = {
                 token: core.getInput('token'),
-                commitMessage: core.getInput('commit-message'),
                 committer: core.getInput('committer'),
                 author: core.getInput('author'),
                 branch: core.getInput('branch'),
-                title: core.getInput('title'),
-                body: core.getInput('body'),
                 labels: utils.getInputAsArray('labels'),
                 assignees: utils.getInputAsArray('assignees'),
                 reviewers: utils.getInputAsArray('reviewers'),

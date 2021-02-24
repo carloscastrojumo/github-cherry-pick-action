@@ -2,104 +2,73 @@
   <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
 </p>
 
-# Create a JavaScript Action using TypeScript
+# Cherry-picking a pull request commit into branchs
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+This action is designed to be used for cherry-pick commits from pull requests into release branches.
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.  
+GitHub Cherry Pick Action will:
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+- Checkout triggered pull request closed.
+- Create new branch name `cherry-pick-${GITHUB_SHA}` from `branch` input.
+- Cherry-picking `${GITHUB_SHA}` into created `branch`
+- Push new `branch` to remote
+- Open pull request to `branch`
 
-## Create an action from this template
+## Example
 
-Click the `Use this Template` and provide the new repo details for your action
+```yml
+on:
+  pull_request:
+    branches:
+      - master
+    types: ["closed"]
 
-## Code in Main
-
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
-
-Install the dependencies  
-```bash
-$ npm install
+jobs:
+  cherry_pick_release_v1_0:
+    runs-on: ubuntu-latest
+    name: Cherry pick into release-v1.0
+    if: contains(github.event.pull_request.labels.*.name, 'release-v1.0')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cherry pick into release-v1.0
+        uses: carloscastrojumo/github-action-cherry-pick@master
+        with:
+          branch: release-v1.0
+          labels: |
+            cherry-pick
+          reviewers: |
+            aReviewerUser
+  cherry_pick_release_v2_0:
+    runs-on: ubuntu-latest
+    name: Cherry pick into release-v2.0
+    if: contains(github.event.pull_request.labels.*.name, 'release-v2.0')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cherry pick into release-v2.0
+        uses: carloscastrojumo/github-action-cherry-pick@master
+        with:
+          branch: release-v2.0
+          labels: |
+            cherry-pick
+          reviewers: |
+            aReviewerUser
 ```
 
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run package
-```
+### Action inputs
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+| Name | Description | Default |
+| --- | --- | --- |
+| `token` | `GITHUB_TOKEN` or a `repo` scoped [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). | `GITHUB_TOKEN` |
+| `committer` | The committer name and email address in the format `Display Name <email@address.com>`. Defaults to the GitHub Actions bot user. | `GitHub <noreply@github.com>` |
+| `author` | The author name and email address in the format `Display Name <email@address.com>`. Defaults to the user who triggered the workflow run. | `${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>` |
+| `branch` | Name of the branch to merge the cherry pick. | `create-pull-request/patch` |
+| `labels` | A comma or newline-separated list of labels. | |
+| `assignees` | A comma or newline-separated list of assignees (GitHub usernames). | |
+| `reviewers` | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from. | |
+| `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. | |
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
+## License
 
-...
-```
-
-## Change action.yml
-
-The action.yml contains defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
-
-```yaml
-uses: ./
-with:
-  milliseconds: 1000
-```
-
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
-
-## Usage:
-
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+[MIT](LICENSE)

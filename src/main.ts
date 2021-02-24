@@ -11,12 +11,9 @@ export async function run(): Promise<void> {
   try {
     const inputs: Inputs = {
       token: core.getInput('token'),
-      commitMessage: core.getInput('commit-message'),
       committer: core.getInput('committer'),
       author: core.getInput('author'),
       branch: core.getInput('branch'),
-      title: core.getInput('title'),
-      body: core.getInput('body'),
       labels: utils.getInputAsArray('labels'),
       assignees: utils.getInputAsArray('assignees'),
       reviewers: utils.getInputAsArray('reviewers'),

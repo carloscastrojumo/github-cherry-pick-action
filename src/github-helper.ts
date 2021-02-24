@@ -6,12 +6,9 @@ const ERROR_PR_REVIEW_FROM_AUTHOR =
 
 export interface Inputs {
   token: string
-  commitMessage: string
   committer: string
   author: string
   branch: string
-  title: string
-  body: string
   labels: string[]
   assignees: string[]
   reviewers: string[]
@@ -27,19 +24,17 @@ export async function createPullRequest(
     const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
 
     // Get PR title
-    const title = inputs.title
-      ? inputs.title
-      : github.context.payload &&
-        github.context.payload.pull_request &&
-        github.context.payload.pull_request.title
+    const title =
+      github.context.payload &&
+      github.context.payload.pull_request &&
+      github.context.payload.pull_request.title
     core.info(`Using body '${title}'`)
 
     // Get PR body
-    const body = inputs.body
-      ? inputs.body
-      : github.context.payload &&
-        github.context.payload.pull_request &&
-        github.context.payload.pull_request.body
+    const body =
+      github.context.payload &&
+      github.context.payload.pull_request &&
+      github.context.payload.pull_request.body
     core.info(`Using body '${body}'`)
 
     // Create PR
