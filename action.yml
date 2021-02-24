@@ -1,11 +1,39 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: "GitHub cherry pick action"
+description: "GitHub action for cherry pick commits from Pull Requests into Release branchs"
 inputs:
-  milliseconds: # change this
+  token:
+    description: "GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)"
+    default: ${{ github.token }}
+    required: false
+  committer:
+    description: >
+      The committer name and email address in the format `Display Name <email@address.com>`.
+      Defaults to the GitHub Actions bot user.
+    default: "GitHub <noreply@github.com>"
+    required: false
+  author:
+    description: >
+      The author name and email address in the format `Display Name <email@address.com>`.
+      Defaults to the user who triggered the workflow run.
+    default: "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+    required: false
+  branch:
+    description: "Name of the branch to merge the cherry pick"
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  labels:
+    description: "A comma or newline separated list of labels."
+    required: false
+  assignees:
+    description: "A comma or newline separated list of assignees (GitHub usernames)."
+    required: false
+  reviewers:
+    description: "A comma or newline separated list of reviewers (GitHub usernames) to request a review from."
+    required: false
+  team-reviewers:
+    description: >
+      A comma or newline separated list of GitHub teams to request a review from.
+      Note that a `repo` scoped Personal Access Token (PAT) may be required.
+    required: false
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: node12
+  main: dist/index.js
