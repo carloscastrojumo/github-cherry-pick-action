@@ -33,8 +33,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Cherry pick into release-v1.0
-        uses: carloscastrojumo/github-action-cherry-pick@master
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.0
         with:
           branch: release-v1.0
           labels: |
@@ -48,8 +50,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Cherry pick into release-v2.0
-        uses: carloscastrojumo/github-action-cherry-pick@master
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.0
         with:
           branch: release-v2.0
           labels: |
