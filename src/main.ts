@@ -23,7 +23,7 @@ export async function run(): Promise<void> {
     core.info(`Cherry pick into branch ${inputs.branch}!`)
 
     const githubSha = process.env.GITHUB_SHA
-    const prBranch = `cherry-pick-${githubSha}`
+    const prBranch = `cherry-pick-${inputs.branch}-${githubSha}`
 
     // Configure the committer and author
     core.startGroup('Configuring the committer and author')
