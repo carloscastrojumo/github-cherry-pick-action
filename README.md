@@ -60,6 +60,8 @@ jobs:
             cherry-pick
           reviewers: |
             aReviewerUser
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Action inputs
