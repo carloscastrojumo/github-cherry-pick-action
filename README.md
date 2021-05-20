@@ -16,13 +16,13 @@ GitHub Cherry Pick Action will:
 
 ## Example
 
-Cherry-picking pull requests merged on master to branch release-v1.0 in pull requests labeled with release-v1.0 and to branch release-v2.0 in pull requests labeled with release-v2.0.
+Cherry-picking pull requests merged on main to branch *release-v1.0* in pull requests labeled with **release-v1.0** and to branch *release-v2.0* in pull requests labeled with **release-v2.0**.
 
 ```yml
 on:
   pull_request:
     branches:
-      - master
+      - main
     types: ["closed"]
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cherry pick into release-v1.0
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.0
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
           branch: release-v1.0
           labels: |
@@ -53,13 +53,15 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cherry pick into release-v2.0
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.0
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
           branch: release-v2.0
           labels: |
             cherry-pick
           reviewers: |
             aReviewerUser
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Action inputs
