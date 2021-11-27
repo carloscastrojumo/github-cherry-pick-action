@@ -63,6 +63,23 @@ jobs:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+### Working with forked repositories
+
+If you are using this action while working with forked repositories (e.g. when you get pull requests from external contributors), you will have to adapt the trigger to avoid permission problems.
+
+In such a case you should use the `pull_request_target` trigger, which was introduced by github for this usecase.
+
+### Example 
+
+```yml
+on:
+  pull_request_target:
+    branches:
+      - main
+    types: ["closed"]
+ ...
+```
+Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/#improvements-for-public-repository-forks)
 
 ### Action inputs
 
