@@ -55,8 +55,8 @@ export async function createPullRequest(
         github.context.payload.pull_request.labels
 
       if (prLabels) {
-        for(let item of prLabels) {
-          if (item.name != inputs.branch) {
+        for (const item of prLabels) {
+          if (item.name !== inputs.branch) {
             inputs.labels.push(item.name)
           }
         }

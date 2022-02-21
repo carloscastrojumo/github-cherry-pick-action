@@ -70,7 +70,11 @@ function createPullRequest(inputs, prBranch) {
                     github.context.payload.pull_request &&
                     github.context.payload.pull_request.labels;
                 if (prLabels) {
-                    inputs.labels.concat(prLabels);
+                    for (const item of prLabels) {
+                        if (item.name !== inputs.branch) {
+                            inputs.labels.push(item.name);
+                        }
+                    }
                 }
                 core.info(`Applying labels '${inputs.labels}'`);
                 yield octokit.issues.addLabels({
@@ -183,7 +187,7 @@ function run() {
             };
             core.info(`Cherry pick into branch ${inputs.branch}!`);
             const githubSha = process.env.GITHUB_SHA;
-            const prBranch = `cherry-pick-${githubSha}`;
+            const prBranch = `cherry-pick-${inputs.branch}-${githubSha}`;
             // Configure the committer and author
             core.startGroup('Configuring the committer and author');
             const parsedAuthor = utils.parseDisplayNameEmail(inputs.author);
