@@ -214,7 +214,6 @@ async function run() {
     else if (completedCherryPicks.length > 0 && cherryPickErrors.length > 0) {
         core.info(`Finished cherry picking ${JSON.stringify(completedCherryPicks)}`);
         core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`);
-        throw new Error('One or more cherry picks failed');
     }
     else {
         core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`);
@@ -223,10 +222,17 @@ async function run() {
 }
 exports.run = run;
 function filterExecutionStatuses(statuses) {
-    const completedCherryPicks = statuses.filter((status) => { if (status.failed === false)
-        return true; });
-    const cherryPickErrors = statuses.filter((status) => { return status.failed; });
-    return { completedCherryPicks: completedCherryPicks, cherryPickErrors: cherryPickErrors };
+    const completedCherryPicks = statuses.filter(status => {
+        if (status.failed === false)
+            return true;
+    });
+    const cherryPickErrors = statuses.filter(status => {
+        return status.failed;
+    });
+    return {
+        completedCherryPicks: completedCherryPicks,
+        cherryPickErrors: cherryPickErrors
+    };
 }
 exports.filterExecutionStatuses = filterExecutionStatuses;
 async function cherryPickExecution(inputs, branch) {

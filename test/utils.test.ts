@@ -72,6 +72,5 @@ describe('filterIrrelevantBranchLabels', () => {
     testLabels,
     branch
   )
-  console.log(test)
   expect(test).toStrictEqual(['CP v1.0.1', 'other random label', 'etc'])
 })
