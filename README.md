@@ -2,11 +2,13 @@
   <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
 </p>
 
-# Cherry-picking a pull request commit into branchs
+## Fork/Modified from this action: [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action)
+
+# Xealth Auto Cherry Picker
 
 This action is designed to be used for cherry-pick commits from pull requests into release branches.
 
-GitHub Cherry Pick Action will:
+This action will:
 
 - Checkout triggered action.
 - Create new branch name `cherry-pick-${GITHUB_SHA}` from `branch` input.
@@ -14,7 +16,85 @@ GitHub Cherry Pick Action will:
 - Push new `branch` to remote
 - Open pull request to `branch`
 
-## Example
+## Usage
+
+Simply add a `CP v(release branch)` label to your PR, and after merge to master: Github will open a cherry-pick label for you!
+
+An Example:
+ - Open a pull request for main on this repo: https://github.com/arivera-xealth/sample-repo
+ - Add the label `CP v1.0.0`
+ - On merge to `main`, a PR will be opened under the `cherry-pick` label
+ - That's it!
+
+You can see it in action here: https://github.com/arivera-xealth/sample-repo/pull/15
+
+----
+
+## Differences from [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action)
+
+- The code has been reviewed and pulled into another repo for security reasons. 
+- In the other action, a user must specify the branch in the `workflow`, our modifications allow for users to input their own branches via **labels**
+- All new changes from the original repository are under the `test` folder
+
+
+### Action inputs
+
+| Name | Description | Default |
+| --- | --- | --- |
+| `token` | `GITHUB_TOKEN` or a `repo` scoped [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). | `GITHUB_TOKEN` |
+| `committer` | The committer name and email address in the format `Display Name <email@address.com>`. Defaults to the GitHub Actions bot user. | `GitHub <noreply@github.com>` |
+| `author` | The author name and email address in the format `Display Name <email@address.com>`. Defaults to the user who triggered the workflow run. | `${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>` |
+| `branch` | Name of the branch to merge the cherry pick. | `create-pull-request/patch` |
+| `labels` | A comma or newline-separated list of labels. | |
+| `assignees` | A comma or newline-separated list of assignees (GitHub usernames). | |
+| `reviewers` | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from. | |
+| `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. | |
+
+### Xealth Specific Inputs
+| Name | Description | Default |
+| --- | --- | --- |
+| `allowUserToSpecifyBranchViaLabel` | Allows the user to specify which branch or branches to cherry pick to via their label | |
+| `labelPatternRequirement` | If the above is true, a user can specify a label pattern to look for. Ex: "CP v" will find labels like "CP v1.0.0" ||
+| `userBranchPrefix` | A prefix to apply to the release branches. Ex: v -> v1.0.0 or release- -> release-1.0.0 ||
+
+
+
+# Configuration
+
+
+## Xealth Specific Example
+
+```
+on:
+  pull_request:
+    branches:
+      - main
+    types: ["closed"]
+
+jobs:
+  cherry_pick_release_v1_0:
+    runs-on: ubuntu-latest
+    name: Xealth Auto Cherry Picker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Xealth Auto Cherry Pick
+        uses: arivera-xealth/xealth-auto-cherry-pick@v1.0.0
+        with:
+          allowUserToSpecifyBranchViaLabel: 'true'
+          labelPatternRequirement: 'CP v'
+          userBranchPrefix: 'v'
+          labels: |
+            cherry-pick
+          reviewers: |
+            aReviewerUser
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+## Original Example
 
 Cherry-picking pull requests merged on main to branch *release-v1.0* in pull requests labeled with **release-v1.0** and to branch *release-v2.0* in pull requests labeled with **release-v2.0**.
 
@@ -81,19 +161,6 @@ on:
  ...
 ```
 Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/#improvements-for-public-repository-forks)
-
-### Action inputs
-
-| Name | Description | Default |
-| --- | --- | --- |
-| `token` | `GITHUB_TOKEN` or a `repo` scoped [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). | `GITHUB_TOKEN` |
-| `committer` | The committer name and email address in the format `Display Name <email@address.com>`. Defaults to the GitHub Actions bot user. | `GitHub <noreply@github.com>` |
-| `author` | The author name and email address in the format `Display Name <email@address.com>`. Defaults to the user who triggered the workflow run. | `${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>` |
-| `branch` | Name of the branch to merge the cherry pick. | `create-pull-request/patch` |
-| `labels` | A comma or newline-separated list of labels. | |
-| `assignees` | A comma or newline-separated list of assignees (GitHub usernames). | |
-| `reviewers` | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from. | |
-| `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. | |
 
 ## License
 

@@ -1,5 +1,5 @@
-name: "GitHub cherry pick action"
-description: "GitHub action for cherry pick commits from Pull Requests into Release branchs"
+name: "xealth auto cherry pick action"
+description: "GitHub action for cherry pick commits from Pull Requests into Release branches"
 inputs:
   token:
     description: "GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)"
@@ -34,8 +34,20 @@ inputs:
       A comma or newline separated list of GitHub teams to request a review from.
       Note that a `repo` scoped Personal Access Token (PAT) may be required.
     required: false
+  allowUserToSpecifyBranchViaLabel: 
+    description: >
+      Allows the user to specify which branch or branches to cherry pick to via their label
+    required: false
+  labelPatternRequirement:
+    description: >
+      If the above is true, a user can specify a label pattern to look for. Ex: "CP v" will find labels like "CP v1.0.0"
+    required: false
+  userBranchPrefix:
+    description: >
+      A prefix to apply to the release branches. Ex: v -> v1.0.0 or release- -> release-1.0.0
+  
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
 branding:
   icon: 'git-pull-request'
