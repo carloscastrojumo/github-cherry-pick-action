@@ -175,39 +175,6 @@ If you'd like users to cherry pick based on label input, see below:
 _Keep in mind, `branch` will be overriden if `allowUserToSpecifyBranchViaLabel` is set true!_
 
 
-
-## User Specified Labels
-
-```
-on:
-  pull_request:
-    branches:
-      - main
-    types: ["closed"]
-
-jobs:
-  cherry_pick_release_v1_0:
-    runs-on: ubuntu-latest
-    name: Xealth Auto Cherry Picker
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Xealth Auto Cherry Pick
-        uses: arivera-xealth/xealth-auto-cherry-pick@v1.0.0
-        with:
-          allowUserToSpecifyBranchViaLabel: 'true'
-          labelPatternRequirement: 'CP v' <--- Every label that starts with "CP v" will be cherry picked
-          userBranchPrefix: 'v' <--- This add a prefix to the branch (if the branch starts with a prefix)
-          labels: |
-            cherry-pick
-          reviewers: |
-            aReviewerUser
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
 _Note from the [original author](carloscastrojumo/github-cherry-pick-action):_
 
 ### Working with forked repositories
