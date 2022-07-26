@@ -217,7 +217,6 @@ async function run() {
     }
     else {
         core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`);
-        throw new Error('All cherry picks failed');
     }
 }
 exports.run = run;
@@ -407,15 +406,15 @@ function parseBranchFromLabel(branchPrefix, label) {
 exports.parseBranchFromLabel = parseBranchFromLabel;
 function filterIrrelevantBranchLabels(inputs, labels, branch) {
     return labels.filter((label) => {
-        if (validatelabelPatternRequirement(inputs.labelPatternRequirement, label)) {
+        if (!validatelabelPatternRequirement(inputs.labelPatternRequirement, label))
+            return true;
+        else {
             const branchWithoutPrefix = branch.replace(inputs.userBranchPrefix, '');
             if (label.includes(branchWithoutPrefix))
                 return true;
             else
                 return false;
         }
-        else
-            return true;
     });
 }
 exports.filterIrrelevantBranchLabels = filterIrrelevantBranchLabels;

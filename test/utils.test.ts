@@ -55,22 +55,24 @@ describe('validatelabelPatternRequirement', () => {
 })
 
 describe('filterIrrelevantBranchLabels', () => {
-  const inputs = {
-    userBranchPrefix: 'v',
-    labelPatternRequirement: 'CP v'
-  }
-  const testLabels = [
-    'CP v1.0.0',
-    'CP v1.0.1',
-    'CP v2.0.0',
-    'other random label',
-    'etc'
-  ]
-  const branch = 'v1.0.1'
-  const test = filterIrrelevantBranchLabels(
-    inputs as Inputs,
-    testLabels,
-    branch
-  )
-  expect(test).toStrictEqual(['CP v1.0.1', 'other random label', 'etc'])
+  it('should filter correctly', () => {
+    const inputs = {
+      userBranchPrefix: 'v',
+      labelPatternRequirement: 'CP v'
+    }
+    const testLabels = [
+      'CP v1.0.0',
+      'CP v1.0.1',
+      'CP v2.0.0',
+      'other random label',
+      'etc'
+    ]
+    const branch = 'v1.0.1'
+    const test = filterIrrelevantBranchLabels(
+      inputs as Inputs,
+      testLabels,
+      branch
+    )
+    expect(test).toStrictEqual(['CP v1.0.1', 'other random label', 'etc'])
+  })
 })

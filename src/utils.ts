@@ -74,12 +74,12 @@ export function filterIrrelevantBranchLabels(
   branch: string
 ): string[] {
   return labels.filter((label: string) => {
-    if (
-      validatelabelPatternRequirement(inputs.labelPatternRequirement, label)
-    ) {
+    if (!validatelabelPatternRequirement(inputs.labelPatternRequirement, label))
+      return true
+    else {
       const branchWithoutPrefix = branch.replace(inputs.userBranchPrefix, '')
       if (label.includes(branchWithoutPrefix)) return true
       else return false
-    } else return true
+    }
   })
 }
