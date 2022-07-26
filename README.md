@@ -10,12 +10,14 @@ We'd like to acknowledge [cherry-pick-action](https://github.com/marketplace/act
 
 Automatically create a cherry pick `pull-request` to user defined `labels` and static release branches!
 
-##### Table of Contents  
-[What does it do?](#-what-does-it-do)  
-[Differences](#differences-from-cherry-pick-action)  
-[Examples/Demos](#examplesdemos) 
-[Usage](#usage) 
-[Configuration](#- configuration) 
+- [What does it do?](#-what-does-it-do)  
+- [Differences](#differences-from-cherry-pick-action)  
+- [Examples/Demos](#-examplesdemos) 
+- [Usage](#-usage)
+- [Configuration](#-configuration) 
+- [Inputs](#action-inputs)
+
+---
 
 ## 🤔 What does it do? 
 
@@ -47,13 +49,13 @@ Take this [pull request](https://github.com/arivera-xealth/sample-repo/pull/66) 
 
 Usage depends on your needs. Please see the following options:
 
-### Do you want users to be able to specify the release branches dynamically via `labels`?
+**Do you want users to be able to specify the release branches dynamically via `labels`?**
 
-Please see [User Defined Labels](user-Defined-labels) and its [inputs](user-defined-labels-1).
+- Please see [User Defined Labels](user-Defined-labels) and its [inputs](user-defined-labels-1).
 
-### Want to statically define a release branch or trigger it based on other logic?
+**Want to statically define a release branch or trigger it based on other logic?**
 
-Please see [Base Configuration](base-configuration) and its [inputs](base-configuration-1)
+- Please see [Base Configuration](base-configuration) and its [inputs](base-configuration-1)
 
 ----
 
@@ -68,7 +70,7 @@ on:
   pull_request:
     branches:
       - main
-    types: ["closed"]
+    types: ["closed", "labeled"]
 
 jobs:
   cherry_pick_release_v1_0:
