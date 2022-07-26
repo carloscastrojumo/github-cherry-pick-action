@@ -2,38 +2,48 @@
   <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
 </p>
 
-## Fork/Modified from this action: [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action)
+## Fork of this action: [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action)
 
-# Xealth Auto Cherry Picker
+# Xealth "Manhattan" - A Github Cherry Pick Action 🍒 
 
-This action is designed to be used for cherry-pick commits from pull requests into release branches.
+Automatically create a cherry pick `pull-request` to user defined `labels` and static release branches!
+
+##### Table of Contents  
+[What does it do?](#-what-does-it-do)  
+[Emphasis](#emphasis)  
+
+## 🤔 What does it do? 
 
 This action will:
 
 - Checkout triggered action.
 - Create new branch name `cherry-pick-${GITHUB_SHA}` from `branch` input.
-- Cherry-picking `${GITHUB_SHA}` into created `branch`
-- Push new `branch` to remote
+- Cherry-pick the `${GITHUB_SHA}` into the created `branch`
+- Push new `branch` to `remote`
 - Open pull request to `branch`
 
-## Usage
+## 💻 Examples/Demos
+Head over to [this repo](https://github.com/arivera-xealth/sample-repo/pulls) to this in "action" (pun intended)!
 
-Simply add a `CP v(release branch)` label to your PR, and after merge to master: Github will open a cherry-pick label for you!
+Take this [pull request](https://github.com/arivera-xealth/sample-repo/pull/66) for example:
+- Before or after merging the pull request `main`, the user specified the release branch they'd like to cherry pick that commit to.
+- By adding the `CP v2.0.0` label, the action opened [this](https://github.com/arivera-xealth/sample-repo/pull/67) pull request on behalf of the user, according to the action's [configuration](#Configuration)
 
-An Example:
- - Open a pull request for main on this repo: https://github.com/arivera-xealth/sample-repo
- - Add the label `CP v1.0.0`
- - On merge to `main`, a PR will be opened under the `cherry-pick` label
- - That's it!
 
-You can see it in action here: https://github.com/arivera-xealth/sample-repo/pull/15
+
+## 🕺 Usage
+
+Usage depends on your action's configuration. Please see the following options:
+
+### Do you want users to be able to specify
+
+
 
 ----
 
 ## Differences from [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action)
 
-- The code has been reviewed and pulled into another repo for security reasons. 
-- In the other action, a user must specify the branch in the `workflow`, our modifications allow for users to input their own branches via **labels**
+- In the other action, a user must specify the branch in the `workflow`, this action allows for users to input their own branches via **labels**
 - All new changes from the original repository are under the `test` folder
 
 
@@ -59,7 +69,7 @@ You can see it in action here: https://github.com/arivera-xealth/sample-repo/pul
 
 
 
-# Configuration
+#Configuration
 
 
 ## Xealth Specific Example
