@@ -195,6 +195,10 @@ on:
 ```
 More information can be found in the [GitHub Blog](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/#improvements-for-public-repository-forks)
 
+## Contributing
+
+Please contribute by opening a pull-request! We recommend also opening a pull request to the [original creator](https://github.com/marketplace/actions/github-cherry-pick-action)'s repository as well. 
+
 ## License
 
 [MIT](LICENSE)
