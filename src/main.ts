@@ -75,7 +75,6 @@ export async function run(): Promise<void> {
     core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
   } else {
     core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
-    throw new Error('All cherry picks failed')
   }
 }
 
