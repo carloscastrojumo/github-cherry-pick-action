@@ -4,7 +4,7 @@
 
 ## Fork of this action: [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action)
 
-We'd like to acknowledge [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action) for giving a great foundation of which we built additional functionality. Please check out that action if you think it better suits your needs. 
+We'd like to acknowledge [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action) for giving a great foundation for us to build additional functionality. Please check out that action if you think it better suits your needs. 
 
 # Xealth "Manhattan" - A Github Cherry Pick Action 🍒 
 
@@ -31,7 +31,7 @@ This action will:
 
 ## Differences from [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action)
 
-In the other action, a user must specify the release branch in the `workflow`, this action allows for users to input their own branches via `labels`.
+In the other action, a user must specify the release branch in the `workflow`; This action allows for users to input their own branches via `labels`.
 This action also supports specifying multiple release branches in **one PR**. 
 
 ----
@@ -45,14 +45,23 @@ Take this [pull request](https://github.com/arivera-xealth/sample-repo/pull/66) 
 
 ## 🕺 Usage
 
-Usage depends on your action's configuration. Please see the following options:
+Usage depends on your needs. Please see the following options:
 
-### Do you want users to be able to specify
+### Do you want users to be able to specify the release branches dynamically via `labels`?
 
+Please see [User Defined Labels](user-Defined-labels) and its [inputs](user-defined-labels-1).
 
-# 📋 Configuration
+### Want to statically define a release branch or trigger it based on other logic?
 
-## User Specified Labels
+Please see [Base Configuration](base-configuration) and its [inputs](base-configuration-1)
+
+----
+
+## 📋 Configuration
+
+Some examples:
+
+### User Defined Labels
 
 ```
 on:
@@ -71,7 +80,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Xealth Auto Cherry Pick
-        uses: arivera-xealth/xealth-auto-cherry-pick@v1.0.0
+        uses: xealth/cherry-pick-action@v1.0.0
         with:
           allowUserToSpecifyBranchViaLabel: 'true'
           labelPatternRequirement: 'CP v' <--- Every label that starts with "CP v" will be cherry picked
@@ -84,7 +93,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-## Original Example
+### Base Configuration
 
 Cherry-picking pull requests merged on main to branch *release-v1.0* in pull requests labeled with **release-v1.0** and to branch *release-v2.0* in pull requests labeled with **release-v2.0**.
 
@@ -106,7 +115,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cherry pick into release-v1.0
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        uses: xealth/cherry-pick-action@v1.0.0
         with:
           branch: release-v1.0
           labels: |
@@ -123,7 +132,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cherry pick into release-v2.0
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        uses: xealth/cherry-pick-action@v1.0.0
         with:
           branch: release-v2.0
           labels: |
@@ -138,9 +147,8 @@ env:
 
 ## Action inputs
 
-### Static Release Branches
+#### Base Configuration
 If your release branches do not change often, setting up user defined labels might not be necessary. 
-
 
 | Name | Description | Default |
 | --- | --- | --- |
@@ -153,15 +161,16 @@ If your release branches do not change often, setting up user defined labels mig
 | `reviewers` | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from. | |
 | `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. | |
 
-### User Defined Labels
+If you'd like users to cherry pick based on label input, see below:
+
+#### User Defined Labels
 | Name | Description | Default |
 | --- | --- | --- |
-| `allowUserToSpecifyBranchViaLabel` | Allows the user to specify which branch or branches to cherry pick to via their label | |
+| `allowUserToSpecifyBranchViaLabel` | Must be `true` (string) if enabled, Allows the user to specify which branch or branches to cherry pick to via their label | |
 | `labelPatternRequirement` | If the above is true, a user can specify a label pattern to look for. Ex: "CP v" will find labels like "CP v1.0.0" ||
-| `userBranchPrefix` | A prefix to apply to the release branches. Ex: v -> v1.0.0 or release- -> release-1.0.0 ||
+| `userBranchPrefix` | A prefix to apply to the release branches. Ex: v -> `v1.0.0` or release- -> `release-1.0.0` ||
 
-
-
+_Keep in mind, `branch` will be overriden if `allowUserToSpecifyBranchViaLabel` is set true!_
 
 
 
@@ -197,55 +206,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-## Original Example
-
-Cherry-picking pull requests merged on main to branch *release-v1.0* in pull requests labeled with **release-v1.0** and to branch *release-v2.0* in pull requests labeled with **release-v2.0**.
-
-```yml
-on:
-  pull_request:
-    branches:
-      - main
-    types: ["closed"]
-
-jobs:
-  cherry_pick_release_v1_0:
-    runs-on: ubuntu-latest
-    name: Cherry pick into release-v1.0
-    if: contains(github.event.pull_request.labels.*.name, 'release-v1.0')
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Cherry pick into release-v1.0
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
-        with:
-          branch: release-v1.0
-          labels: |
-            cherry-pick
-          reviewers: |
-            aReviewerUser
-  cherry_pick_release_v2_0:
-    runs-on: ubuntu-latest
-    name: Cherry pick into release-v2.0
-    if: contains(github.event.pull_request.labels.*.name, 'release-v2.0')
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Cherry pick into release-v2.0
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
-        with:
-          branch: release-v2.0
-          labels: |
-            cherry-pick
-          reviewers: |
-            aReviewerUser
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
+_Note from the [original author](carloscastrojumo/github-cherry-pick-action):_
 
 ### Working with forked repositories
 
