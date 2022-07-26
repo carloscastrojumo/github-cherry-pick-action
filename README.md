@@ -197,7 +197,7 @@ More information can be found in the [GitHub Blog](https://github.blog/2020-08-0
 
 ## Contributing
 
-Please contribute by opening a pull-request! We recommend also opening a pull request to the [original creator](https://github.com/marketplace/actions/github-cherry-pick-action)'s repository as well. 
+Please contribute by opening a pull-request! We recommend also opening a pull request to the [original creator's repository](https://github.com/marketplace/actions/github-cherry-pick-action) as well. 
 
 ## License
 
