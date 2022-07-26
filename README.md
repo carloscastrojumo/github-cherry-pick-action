@@ -55,7 +55,7 @@ Usage depends on your needs. Please see the following options:
 
 **Want to statically define a release branch or trigger it based on other logic?**
 
-- Please see [Base Configuration](base-configuration) and its [inputs](base-configuration-1)
+- Please see [Basic Configuration](basic-configuration) and its [inputs](basic-configuration-1)
 
 ----
 
@@ -95,7 +95,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### Base Configuration
+### Basic Configuration
 
 Cherry-picking pull requests merged on main to branch *release-v1.0* in pull requests labeled with **release-v1.0** and to branch *release-v2.0* in pull requests labeled with **release-v2.0**.
 
@@ -149,7 +149,7 @@ env:
 
 ## Action inputs
 
-#### Base Configuration
+#### Basic Configuration
 If your release branches do not change often, setting up user defined labels might not be necessary. 
 
 | Name | Description | Default |
