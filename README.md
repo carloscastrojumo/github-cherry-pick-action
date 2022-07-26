@@ -43,7 +43,7 @@ Head over to [this repo](https://github.com/arivera-xealth/sample-repo/pulls) to
 
 Take this [pull request](https://github.com/arivera-xealth/sample-repo/pull/66) for example:
 - Before or after merging the pull request `main`, the user specified the release branch they'd like to cherry pick that commit to.
-- By adding the `CP v2.0.0` label, the action opened [this](https://github.com/arivera-xealth/sample-repo/pull/67) pull request on behalf of the user, according to the action's [configuration](#Configuration)
+- By adding the `CP v2.0.0` label, the action opened [this](https://github.com/arivera-xealth/sample-repo/pull/67) pull request on behalf of the user, according to the action's [Configuration](#configuration).
 
 ## 🕺 Usage
 
@@ -51,11 +51,11 @@ Usage depends on your needs. Please see the following options:
 
 **Do you want users to be able to specify the release branches dynamically via `labels`?**
 
-- Please see [User Defined Labels](user-Defined-labels) and its [inputs](user-defined-labels-1).
+- Please see [User Defined Labels](#user-defined-labels) and its [inputs](#user-defined-labels-1).
 
 **Want to statically define a release branch or trigger it based on other logic?**
 
-- Please see [Basic Configuration](basic-configuration) and its [inputs](basic-configuration-1)
+- Please see [Basic Configuration](#basic-configuration) and its [inputs](#basic-configuration-1)
 
 ----
 
