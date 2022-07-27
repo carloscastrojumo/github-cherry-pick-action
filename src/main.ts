@@ -47,7 +47,7 @@ export async function run(): Promise<void> {
     core.info(`No branches to cherry pick`)
     return
   }
-  
+
   core.info(`branches to cherry pick ${JSON.stringify(branchesToCherryPick)}`)
 
   const executions: Array<ExecutionStatus> = []
@@ -66,9 +66,8 @@ export async function run(): Promise<void> {
     executions
   )
 
-    core.info(`Finished cherry picking ${JSON.stringify(branchesToCherryPick)}!`)
-    core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
-  }
+  core.info(`Finished cherry picking ${JSON.stringify(completedCherryPicks)}!`)
+  core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
 }
 
 export function filterExecutionStatuses(

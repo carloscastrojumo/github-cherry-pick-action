@@ -50,9 +50,7 @@ export function validatelabelPatternRequirement(
   labelPatternRequirement: string,
   label: string
 ): string | undefined {
-  const match = label.includes(labelPatternRequirement)
-  if (match) return label
-  else return undefined
+  return label.includes(labelPatternRequirement) ? label : undefined
 }
 
 export function parseBranchFromLabel(
