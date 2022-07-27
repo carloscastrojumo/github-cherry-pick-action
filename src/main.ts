@@ -71,14 +71,7 @@ export async function run(): Promise<void> {
     executions
   )
 
-  if (completedCherryPicks.length > 0 && cherryPickErrors.length === 0) {
-    core.info(
-      `Finished cherry picking ${JSON.stringify(branchesToCherryPick)}!`
-    )
-  } else if (completedCherryPicks.length > 0 && cherryPickErrors.length > 0) {
-    core.info(`Finished cherry picking ${JSON.stringify(completedCherryPicks)}`)
-    core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
-  } else {
+    core.info(`Finished cherry picking ${JSON.stringify(branchesToCherryPick)}!`)
     core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
   }
 }
