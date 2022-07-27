@@ -19,8 +19,11 @@
   },
   "keywords": [
     "actions",
-    "node",
-    "setup"
+    "cherry-pick",
+    "auto",
+    "automation",
+    "release",
+    "branch"
   ],
   "author": "carloscastrojumo (https://github.com/carloscastrojumo)",
   "contributors": [
