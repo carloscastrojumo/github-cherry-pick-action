@@ -78,8 +78,7 @@ export function filterIrrelevantBranchLabels(
       return true
     else {
       const branchWithoutPrefix = branch.replace(inputs.userBranchPrefix, '')
-      if (label.includes(branchWithoutPrefix)) return true
-      else return false
+      return label.includes(branchWithoutPrefix)
     }
   })
 }
