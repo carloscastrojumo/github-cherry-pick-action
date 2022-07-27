@@ -8,7 +8,7 @@ We'd like to acknowledge [cherry-pick-action](https://github.com/marketplace/act
 
 # Xealth "Manhattan" - A Cherry Pick GitHub Action 🍒 
 
-Automatically create a cherry pick `pull-request` to user defined `labels` and static release branches!
+Automatically create a cherry pick `pull-request` to user defined `labels` and/or static release branches!
 
 - [What does it do?](#-what-does-it-do)  
 - [Differences](#differences-from-cherry-pick-action)  
@@ -172,7 +172,8 @@ If you'd like users to cherry pick based on label input, see below:
 | `labelPatternRequirement` | If the above is true, a user can specify a label pattern to look for. Ex: "CP v" will find labels like "CP v1.0.0" ||
 | `userBranchPrefix` | A prefix to apply to the release branches. Ex: v -> `v1.0.0` or release- -> `release-1.0.0` ||
 
-_Keep in mind, `branch` will be overriden if `allowUserToSpecifyBranchViaLabel` is set true!_
+- _Keep in mind, `branch` will be overriden if `allowUserToSpecifyBranchViaLabel` is set true!_
+- _Also, `labelPatternRequirement` searches for an exact match using `.includes(labelPatternRequirement)`: We plan to support regex eventually_
 
 
 _Note from the [original author](carloscastrojumo/github-cherry-pick-action):_
