@@ -1,4 +1,4 @@
-import {buildBranchesFromLabels} from '../src/github-helper'
+import {buildBranchesFromLabels} from '../../src/github-helper'
 import * as github from '@actions/github'
 
 describe('buildBranchesFromLabels', () => {
@@ -39,7 +39,7 @@ describe('buildBranchesFromLabels', () => {
       assignees: [],
       reviewers: ['aReviewerUser'],
       teamReviewers: [],
-      allowUserToSpecifyBranchViaLabel: 'true',
+      allowUserToSpecifyBranchViaLabel: 'false',
       labelPatternRequirement: 'CP v',
       userBranchPrefix: 'v'
     }

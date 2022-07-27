@@ -7,6 +7,7 @@ import {
   createPullRequest,
   buildBranchesFromLabels
 } from './github-helper'
+import _ from 'lodash'
 
 const CHERRYPICK_EMPTY =
   'The previous cherry-pick is now empty, possibly due to conflict resolution.'
@@ -39,14 +40,8 @@ export async function run(): Promise<void> {
     userBranchPrefix: core.getInput('userBranchPrefix') || ''
   }
 
-  const branchesToCherryPick =
-    inputs.allowUserToSpecifyBranchViaLabel === 'true'
-      ? buildBranchesFromLabels(inputs)
-      : [inputs.branch]
-  if (!branchesToCherryPick || branchesToCherryPick[0] === '') {
-    core.info(`No branches to cherry pick`)
-    return
-  }
+  const branchesToCherryPick = findBranchesToCherryPick(inputs)
+  if (!branchesToCherryPick) return
 
   core.info(`branches to cherry pick ${JSON.stringify(branchesToCherryPick)}`)
 
@@ -83,6 +78,22 @@ export function filterExecutionStatuses(
     completedCherryPicks: completedCherryPicks,
     cherryPickErrors: cherryPickErrors
   }
+}
+
+export function findBranchesToCherryPick(inputs: Inputs): string[] | undefined {
+  const branchesToCherryPick =
+    inputs.allowUserToSpecifyBranchViaLabel === 'true'
+      ? buildBranchesFromLabels(inputs)
+      : [inputs.branch]
+  if (
+    !branchesToCherryPick ||
+    branchesToCherryPick[0] === '' ||
+    _.isEmpty(branchesToCherryPick)
+  ) {
+    core.info(`No branches to cherry pick`)
+    return undefined
+  }
+  return branchesToCherryPick
 }
 
 async function cherryPickExecution(

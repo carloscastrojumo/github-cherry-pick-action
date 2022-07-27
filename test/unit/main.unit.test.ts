@@ -1,4 +1,4 @@
-import {filterExecutionStatuses, ExecutionStatus, Statuses} from '../src/main'
+import {filterExecutionStatuses, ExecutionStatus, Statuses} from '../../src/main'
 describe('filterExecutionStatuses', () => {
   const Statuses = [
     {

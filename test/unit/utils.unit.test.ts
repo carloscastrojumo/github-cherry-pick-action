@@ -2,9 +2,9 @@ import {
   parseBranchFromLabel,
   validatelabelPatternRequirement,
   filterIrrelevantBranchLabels
-} from '../src/utils'
+} from '../../src/utils'
 
-import {Inputs} from '../src/github-helper'
+import {Inputs} from '../../src/github-helper'
 
 describe('parseBranchFromLabel', () => {
   it('should parse version from label', () => {
