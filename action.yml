@@ -44,11 +44,11 @@ inputs:
     required: false
   userBranchPrefix:
     description: >
-      A prefix to apply to the release branches. Ex: v -> v1.0.0 or release- -> release-1.0.0
+      A prefix to apply to the target release branch. Ex: v -> v1.0.0 or release- -> release-1.0.0
   
 runs:
   using: node16
   main: dist/index.js
 branding:
   icon: 'git-pull-request'
-  color: 'orange'
+  color: 'blue'

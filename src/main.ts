@@ -50,6 +50,11 @@ export async function run(): Promise<void> {
     return
   }
 
+  if (branchesToCherryPick[0] === '') {
+    core.info(`No branches to cherry pick`)
+    return
+  }
+
   const executions: Array<ExecutionStatus> = []
 
   core.info(`Executing ${executions.length} cherry picks...`)
