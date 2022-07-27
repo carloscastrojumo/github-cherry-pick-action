@@ -6,7 +6,7 @@
 
 We'd like to acknowledge [cherry-pick-action](https://github.com/marketplace/actions/github-cherry-pick-action) for giving a great foundation for us to build additional functionality. Please check out that action if you think it better suits your needs. 
 
-# Xealth "Manhattan" - A Github Cherry Pick Action 🍒 
+# Xealth "Manhattan" - A Cherry Pick GitHub Action 🍒 
 
 Automatically create a cherry pick `pull-request` to user defined `labels` and static release branches!
 
