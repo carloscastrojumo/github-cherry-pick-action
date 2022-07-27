@@ -43,17 +43,12 @@ export async function run(): Promise<void> {
     inputs.allowUserToSpecifyBranchViaLabel === 'true'
       ? buildBranchesFromLabels(inputs)
       : [inputs.branch]
+  if (!branchesToCherryPick || branchesToCherryPick[0] === '') {
+    core.info(`No branches to cherry pick`)
+    return
+  }
+  
   core.info(`branches to cherry pick ${JSON.stringify(branchesToCherryPick)}`)
-
-  if (!branchesToCherryPick) {
-    core.info(`No branches to cherry pick`)
-    return
-  }
-
-  if (branchesToCherryPick[0] === '') {
-    core.info(`No branches to cherry pick`)
-    return
-  }
 
   const executions: Array<ExecutionStatus> = []
 
