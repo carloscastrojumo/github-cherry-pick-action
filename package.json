@@ -27,9 +27,20 @@
   ],
   "author": "carloscastrojumo (https://github.com/carloscastrojumo)",
   "contributors": [
-    {"name": "Michael Angelo Rivera", "email": "mar@michaelangrivera.com", "url": "https://github.com/michaelangrivera"},
-    {"name": "Joe Bowbeer", "email": "joe.bowbeer@xealth.io", "url": "https://github.com/joebowbeer"},
-    {"name": "Xealth, Inc.", "url": "https://xealth.io"}
+    {
+      "name": "Michael Angelo Rivera",
+      "email": "mar@michaelangrivera.com",
+      "url": "https://github.com/michaelangrivera"
+    },
+    {
+      "name": "Joe Bowbeer",
+      "email": "joe.bowbeer@xealth.io",
+      "url": "https://github.com/joebowbeer"
+    },
+    {
+      "name": "Xealth, Inc.",
+      "url": "https://xealth.io"
+    }
   ],
   "license": "MIT",
   "dependencies": {
@@ -44,7 +55,7 @@
     "@types/lodash": "^4.14.182",
     "@types/node": "^14.18.22",
     "@typescript-eslint/parser": "^4.8.1",
-    "@vercel/ncc": "^0.25.1",
+    "@vercel/ncc": "^0.34.0",
     "eslint": "^7.17.0",
     "eslint-plugin-github": "^4.1.1",
     "eslint-plugin-jest": "^24.1.3",
