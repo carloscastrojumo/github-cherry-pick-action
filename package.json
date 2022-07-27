@@ -25,23 +25,6 @@
     "release",
     "branch"
   ],
-  "author": "carloscastrojumo (https://github.com/carloscastrojumo)",
-  "contributors": [
-    {
-      "name": "Michael Angelo Rivera",
-      "email": "mar@michaelangrivera.com",
-      "url": "https://github.com/michaelangrivera"
-    },
-    {
-      "name": "Joe Bowbeer",
-      "email": "joe.bowbeer@xealth.io",
-      "url": "https://github.com/joebowbeer"
-    },
-    {
-      "name": "Xealth, Inc.",
-      "url": "https://xealth.io"
-    }
-  ],
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.9.0",
