@@ -41,7 +41,10 @@ export async function run(): Promise<void> {
   }
 
   const branchesToCherryPick = findBranchesToCherryPick(inputs)
-  if (!branchesToCherryPick) return
+  if (!branchesToCherryPick) {
+    core.info(`No branches to cherry pick`)
+    return
+  }
 
   core.info(`branches to cherry pick ${JSON.stringify(branchesToCherryPick)}`)
 
@@ -90,7 +93,6 @@ export function findBranchesToCherryPick(inputs: Inputs): string[] | undefined {
     branchesToCherryPick[0] === '' ||
     _.isEmpty(branchesToCherryPick)
   ) {
-    core.info(`No branches to cherry pick`)
     return undefined
   }
   return branchesToCherryPick
