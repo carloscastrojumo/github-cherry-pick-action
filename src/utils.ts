@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import {Inputs} from './github-helper'
 
 export function getInputAsArray(
   name: string,
@@ -42,6 +43,40 @@ export function parseDisplayNameEmail(
       `The format of '${displayNameEmail}' is not a valid email address with display name`
     )
   }
-
   return {name, email}
+}
+
+export function validatelabelPatternRequirement(
+  labelPatternRequirement: string,
+  label: string
+): string | undefined {
+  return label.includes(labelPatternRequirement) ? label : undefined
+}
+
+export function parseBranchFromLabel(
+  branchPrefix: string,
+  label: string
+): string {
+  const versionMatchRegex = /[0-9]\d*(\.[0-9]\d*)*$/
+  const version = label.match(versionMatchRegex)
+  if (!version)
+    throw new Error(
+      'user did not specify release version or the release version is in an invalid format'
+    )
+  return `${branchPrefix}${version[0]}`
+}
+
+export function filterIrrelevantBranchLabels(
+  inputs: Inputs,
+  labels: string[],
+  branch: string
+): string[] {
+  return labels.filter((label: string) => {
+    if (!validatelabelPatternRequirement(inputs.labelPatternRequirement, label))
+      return true
+    else {
+      const branchWithoutPrefix = branch.replace(inputs.userBranchPrefix, '')
+      return label.includes(branchWithoutPrefix)
+    }
+  })
 }
