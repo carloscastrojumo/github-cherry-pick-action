@@ -5,13 +5,13 @@
   "description": "A Cherry Pick GitHub Action 🍒",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run package ",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license license.txt",
     "test": "jest --runInBand",
-    "all": "npm run test && npm run build && npm run format && npm run lint && npm run package"
+    "all": "npm run test && npm run format && npm run lint && npm run build"
   },
   "repository": {
     "type": "git",
