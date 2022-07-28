@@ -39,7 +39,7 @@ This action also supports specifying multiple release branches in **one PR**.
 ----
 
 ## 💻 Examples/Demos
-Head over to [this repo](https://github.com/arivera-xealth/sample-repo/pulls) to this in "action"! (pun intended)
+Head over to [this repo](https://github.com/arivera-xealth/sample-repo/pulls) to see this in "action"! (pun intended)
 
 Take this [pull request](https://github.com/arivera-xealth/sample-repo/pull/66) for example:
 - Before or after merging the pull request `main`, the user specified the release branch they'd like to cherry pick that commit to.
