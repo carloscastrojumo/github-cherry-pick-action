@@ -90,8 +90,8 @@ export function findBranchesToCherryPick(inputs: Inputs): string[] | undefined {
       : [inputs.branch]
   if (
     !branchesToCherryPick ||
-    branchesToCherryPick[0] === '' ||
-    _.isEmpty(branchesToCherryPick)
+    _.isEmpty(branchesToCherryPick) ||
+    branchesToCherryPick[0] === '' 
   ) {
     return undefined
   }
@@ -124,8 +124,8 @@ async function cherryPickExecution(
     ])
     core.endGroup()
 
-    // Update  branchs
-    core.startGroup('Fetch all branchs')
+    // Update  branches
+    core.startGroup('Fetch all branches')
     await gitExecution(['remote', 'update'])
     await gitExecution(['fetch', '--all'])
     core.endGroup()
