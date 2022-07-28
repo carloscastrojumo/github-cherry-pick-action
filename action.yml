@@ -1,4 +1,4 @@
-name: "xealth auto cherry pick action"
+name: "Cherry-Pick Github Action"
 description: "GitHub action for cherry pick commits from Pull Requests into Release branches"
 inputs:
   token:
