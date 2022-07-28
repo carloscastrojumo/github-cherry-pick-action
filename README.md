@@ -64,6 +64,39 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+### User Defined Labels
+
+```
+on:
+  pull_request:
+    branches:
+      - main
+    types: ["closed", "labeled"]
+
+jobs:
+  cherry_pick_release_v1_0:
+    runs-on: ubuntu-latest
+    name: Label Cherry Picker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Xealth Auto Cherry Pick
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        with:
+          allowUserToSpecifyBranchViaLabel: 'true'
+          labelPatternRequirement: 'CP v' <--- Every label that starts with "CP v" will be cherry picked
+          userBranchPrefix: 'v' <--- This add a prefix to the branch (if the branch starts with a prefix)
+          labels: |
+            cherry-pick
+          reviewers: |
+            aReviewerUser
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+
 ### Working with forked repositories
 
 If you are using this action while working with forked repositories (e.g. when you get pull requests from external contributors), you will have to adapt the trigger to avoid permission problems.
@@ -94,6 +127,18 @@ Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03
 | `assignees` | A comma or newline-separated list of assignees (GitHub usernames). | |
 | `reviewers` | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from. | |
 | `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. | |
+
+#### User Defined Labels
+| Name | Description | Default |
+| --- | --- | --- |
+| `allowUserToSpecifyBranchViaLabel` | Must be `true` (string) if enabled, Allows the user to specify which branch or branches to cherry pick to via their label | |
+| `labelPatternRequirement` | If the above is true, a user can specify a label pattern to look for. Ex: "CP v" will find labels like "CP v1.0.0" ||
+| `userBranchPrefix` | A prefix to apply to the release branches. Ex: v -> `v1.0.0` or release- -> `release-1.0.0` ||
+
+- _Keep in mind, `branch` will be overriden if `allowUserToSpecifyBranchViaLabel` is set true!_
+- _Also, `labelPatternRequirement` searches for an exact match using `.includes(labelPatternRequirement)`: We plan to support regex eventually_
+
+
 
 ## License
 
