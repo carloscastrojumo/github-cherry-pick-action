@@ -8,8 +8,8 @@
     "build": "tsc && npm run package ",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
-    "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --license license.txt",
+    "lint": "eslint src/**/*.ts --fix",
+    "package": "ncc build ./src/index.ts",
     "test": "jest --runInBand",
     "all": "npm run test && npm run format && npm run lint && npm run build"
   },

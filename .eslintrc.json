@@ -45,7 +45,8 @@
       "@typescript-eslint/semi": ["error", "never"],
       "@typescript-eslint/type-annotation-spacing": "error",
       "@typescript-eslint/unbound-method": "error",
-      "object-shorthand": "warn"
+      "object-shorthand": "warn",
+      "quotes": ["error", "single"]
     },
     "env": {
       "node": true,

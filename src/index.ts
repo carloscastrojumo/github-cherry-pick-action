@@ -20,8 +20,8 @@ export type ExecutionStatus = {
 }
 
 export type Statuses = {
-  completedCherryPicks: Array<ExecutionStatus>
-  cherryPickErrors: Array<ExecutionStatus>
+  completedCherryPicks: ExecutionStatus[]
+  cherryPickErrors: ExecutionStatus[]
 }
 
 export async function run(): Promise<void> {
@@ -42,13 +42,13 @@ export async function run(): Promise<void> {
 
   const branchesToCherryPick = findBranchesToCherryPick(inputs)
   if (!branchesToCherryPick) {
-    core.info(`No branches to cherry pick`)
+    core.info('No branches to cherry pick')
     return
   }
 
   core.info(`branches to cherry pick ${JSON.stringify(branchesToCherryPick)}`)
 
-  const executions: Array<ExecutionStatus> = []
+  const executions: ExecutionStatus[] = []
 
   core.info(`Executing ${executions.length} cherry picks...`)
 
@@ -68,9 +68,7 @@ export async function run(): Promise<void> {
   core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
 }
 
-export function filterExecutionStatuses(
-  statuses: Array<ExecutionStatus>
-): Statuses {
+export function filterExecutionStatuses(statuses: ExecutionStatus[]): Statuses {
   const completedCherryPicks = statuses.filter(status => {
     if (status.failed === false) return true
   })
@@ -78,8 +76,8 @@ export function filterExecutionStatuses(
     return status.failed
   })
   return {
-    completedCherryPicks: completedCherryPicks,
-    cherryPickErrors: cherryPickErrors
+    completedCherryPicks,
+    cherryPickErrors
   }
 }
 
@@ -159,12 +157,12 @@ async function cherryPickExecution(
     core.startGroup('Opening pull request')
     await createPullRequest(inputs, prBranch, branch)
     core.endGroup()
-    return {branch: branch, failed: false}
+    return {branch, failed: false}
   } catch (error: any) {
     return {
-      branch: branch,
+      branch,
       failed: true,
-      inputs: inputs,
+      inputs,
       msg: core.setFailed(error.message)
     }
   }
