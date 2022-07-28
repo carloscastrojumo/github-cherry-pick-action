@@ -91,7 +91,7 @@ export function findBranchesToCherryPick(inputs: Inputs): string[] | undefined {
   if (
     !branchesToCherryPick ||
     _.isEmpty(branchesToCherryPick) ||
-    branchesToCherryPick[0] === '' 
+    branchesToCherryPick[0] === ''
   ) {
     return undefined
   }

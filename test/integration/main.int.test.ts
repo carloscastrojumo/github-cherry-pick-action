@@ -1,4 +1,4 @@
-import { findBranchesToCherryPick } from "../../src/main"
+import { findBranchesToCherryPick } from "../../src/index"
 import * as github from '@actions/github'
 describe('findBranchesToCherryPickMaybe', () => {
   it('should return array of strings', () => {
