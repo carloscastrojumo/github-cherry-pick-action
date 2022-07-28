@@ -2,28 +2,111 @@ import * as core from '@actions/core'
 import * as io from '@actions/io'
 import * as exec from '@actions/exec'
 import * as utils from './utils'
-import {Inputs, createPullRequest} from './github-helper'
+import {
+  Inputs,
+  createPullRequest,
+  buildBranchesFromLabels
+} from './github-helper'
+import _ from 'lodash'
 
 const CHERRYPICK_EMPTY =
   'The previous cherry-pick is now empty, possibly due to conflict resolution.'
 
-export async function run(): Promise<void> {
-  try {
-    const inputs: Inputs = {
-      token: core.getInput('token'),
-      committer: core.getInput('committer'),
-      author: core.getInput('author'),
-      branch: core.getInput('branch'),
-      labels: utils.getInputAsArray('labels'),
-      assignees: utils.getInputAsArray('assignees'),
-      reviewers: utils.getInputAsArray('reviewers'),
-      teamReviewers: utils.getInputAsArray('teamReviewers')
-    }
+export type ExecutionStatus = {
+  failed: boolean
+  branch: string
+  inputs?: Inputs
+  msg?: string | undefined | void
+}
 
-    core.info(`Cherry pick into branch ${inputs.branch}!`)
+export type Statuses = {
+  completedCherryPicks: Array<ExecutionStatus>
+  cherryPickErrors: Array<ExecutionStatus>
+}
+
+export async function run(): Promise<void> {
+  const inputs: Inputs = {
+    token: core.getInput('token'),
+    committer: core.getInput('committer'),
+    author: core.getInput('author'),
+    branch: core.getInput('branch'),
+    labels: utils.getInputAsArray('labels'),
+    assignees: utils.getInputAsArray('assignees'),
+    reviewers: utils.getInputAsArray('reviewers'),
+    teamReviewers: utils.getInputAsArray('teamReviewers'),
+    allowUserToSpecifyBranchViaLabel:
+      core.getInput('allowUserToSpecifyBranchViaLabel') || '',
+    labelPatternRequirement: core.getInput('labelPatternRequirement'),
+    userBranchPrefix: core.getInput('userBranchPrefix') || ''
+  }
+
+  const branchesToCherryPick = findBranchesToCherryPick(inputs)
+  if (!branchesToCherryPick) {
+    core.info(`No branches to cherry pick`)
+    return
+  }
+
+  core.info(`branches to cherry pick ${JSON.stringify(branchesToCherryPick)}`)
+
+  const executions: Array<ExecutionStatus> = []
+
+  core.info(`Executing ${executions.length} cherry picks...`)
+
+  for (const branch of branchesToCherryPick) {
+    try {
+      executions.push(await cherryPickExecution(inputs, branch))
+    } catch (e: any) {
+      executions.push(e)
+    }
+  }
+
+  const {completedCherryPicks, cherryPickErrors} = filterExecutionStatuses(
+    executions
+  )
+
+  core.info(`Finished cherry picking ${JSON.stringify(completedCherryPicks)}!`)
+  core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
+}
+
+export function filterExecutionStatuses(
+  statuses: Array<ExecutionStatus>
+): Statuses {
+  const completedCherryPicks = statuses.filter(status => {
+    if (status.failed === false) return true
+  })
+  const cherryPickErrors = statuses.filter(status => {
+    return status.failed
+  })
+  return {
+    completedCherryPicks: completedCherryPicks,
+    cherryPickErrors: cherryPickErrors
+  }
+}
+
+export function findBranchesToCherryPick(inputs: Inputs): string[] | undefined {
+  const branchesToCherryPick =
+    inputs.allowUserToSpecifyBranchViaLabel === 'true'
+      ? buildBranchesFromLabels(inputs)
+      : [inputs.branch]
+  if (
+    !branchesToCherryPick ||
+    _.isEmpty(branchesToCherryPick) ||
+    branchesToCherryPick[0] === '' 
+  ) {
+    return undefined
+  }
+  return branchesToCherryPick
+}
+
+async function cherryPickExecution(
+  inputs: Inputs,
+  branch: string
+): Promise<ExecutionStatus> {
+  try {
+    core.info(`Cherry pick into branch ${branch}!`)
 
     const githubSha = process.env.GITHUB_SHA
-    const prBranch = `cherry-pick-${inputs.branch}-${githubSha}`
+    const prBranch = `cherry-pick-${branch}-${githubSha}`
 
     // Configure the committer and author
     core.startGroup('Configuring the committer and author')
@@ -41,15 +124,15 @@ export async function run(): Promise<void> {
     ])
     core.endGroup()
 
-    // Update  branchs
-    core.startGroup('Fetch all branchs')
+    // Update  branches
+    core.startGroup('Fetch all branches')
     await gitExecution(['remote', 'update'])
     await gitExecution(['fetch', '--all'])
     core.endGroup()
 
     // Create branch new branch
-    core.startGroup(`Create new branch from ${inputs.branch}`)
-    await gitExecution(['checkout', '-b', prBranch, `origin/${inputs.branch}`])
+    core.startGroup(`Create new branch from ${branch}`)
+    await gitExecution(['checkout', '-b', prBranch, `origin/${branch}`])
     core.endGroup()
 
     // Cherry pick
@@ -74,10 +157,16 @@ export async function run(): Promise<void> {
 
     // Create pull request
     core.startGroup('Opening pull request')
-    await createPullRequest(inputs, prBranch)
+    await createPullRequest(inputs, prBranch, branch)
     core.endGroup()
-  } catch (error) {
-    core.setFailed(error.message)
+    return {branch: branch, failed: false}
+  } catch (error: any) {
+    return {
+      branch: branch,
+      failed: true,
+      inputs: inputs,
+      msg: core.setFailed(error.message)
+    }
   }
 }
 
