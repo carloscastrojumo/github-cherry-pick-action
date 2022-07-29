@@ -101,7 +101,7 @@ Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03
 ### Action inputs
 
 | Name             | Description                                                                                                                                                                                                               | Default                                                              |
-|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+|:-----------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
 | `token`          | `GITHUB_TOKEN` or a `repo` scoped [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).                                                             | `GITHUB_TOKEN`                                                       |
 | `committer`      | The committer name and email address in the format `Display Name <email@address.com>`. Defaults to the GitHub Actions bot user.                                                                                           | `GitHub <noreply@github.com>`                                        |
 | `author`         | The author name and email address in the format `Display Name <email@address.com>`. Defaults to the user who triggered the workflow run.                                                                                  | `${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>` |
@@ -113,6 +113,7 @@ Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03
 | `title`          | Title of the new pull request, the special string `{old_title}` will be substituted for the title of the pull request which triggered the action                                                                          | [Triggering pull request title]                                      |
 | `body`           | Body of the new pull request, the special string `{old_pull_request_id}` will be substituted for the ID of the pull request which triggered the action                                                                    | [Triggering pull request body]                                       |
 | `cherry-pick-branch`           | Name of the new cherry pick branch                                                                    | `cherry-pick-${inputs.branch}-${commitSha}`                                      |
+| `force`          | Set true or false to forcefully push the cherrypicked changes branch to remote branch.                                                                                                                                    | false                                                                |
 
 ### Action outputs
 

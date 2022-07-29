@@ -50,6 +50,8 @@ inputs:
     required: false
   cherry-pick-branch:
     description: "Name of the new cherry pick branch."
+  force:
+    description: "Forcefully push the branch to remote branch"
     required: false
 runs:
   using: node16
