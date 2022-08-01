@@ -9332,6 +9332,7 @@ function run() {
                 branch: core.getInput('branch'),
                 title: core.getInput('title'),
                 body: core.getInput('body'),
+                force: utils.getInputAsBoolean('force'),
                 labels: utils.getInputAsArray('labels'),
                 inherit_labels: utils.getInputAsBoolean('inherit_labels'),
                 assignees: utils.getInputAsArray('assignees'),
@@ -9382,7 +9383,12 @@ function run() {
             core.endGroup();
             // Push new branch
             core.startGroup('Push new branch to remote');
-            yield gitExecution(['push', '-u', 'origin', `${prBranch}`]);
+            if (inputs.force) {
+                yield gitExecution(['push', '-u', 'origin', `${prBranch}`, '--force']);
+            }
+            else {
+                yield gitExecution(['push', '-u', 'origin', `${prBranch}`]);
+            }
             core.endGroup();
             // Create pull request
             core.startGroup('Opening pull request');
