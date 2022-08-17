@@ -46,14 +46,24 @@ function createPullRequest(inputs, prBranch) {
         if (process.env.GITHUB_REPOSITORY !== undefined) {
             const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
             // Get PR title
-            const title = github.context.payload &&
-                github.context.payload.pull_request &&
-                github.context.payload.pull_request.title;
-            core.info(`Using body '${title}'`);
+            core.info(`Input title is '${inputs.title}'`);
+            let title = inputs.title;
+            if (title === undefined || title === '') {
+                title =
+                    github.context.payload &&
+                        github.context.payload.pull_request &&
+                        github.context.payload.pull_request.title;
+            }
+            core.info(`Using title '${title}'`);
             // Get PR body
-            const body = github.context.payload &&
-                github.context.payload.pull_request &&
-                github.context.payload.pull_request.body;
+            core.info(`Input body is '${inputs.body}'`);
+            let body = inputs.body;
+            if (body === undefined || body === '') {
+                body =
+                    github.context.payload &&
+                        github.context.payload.pull_request &&
+                        github.context.payload.pull_request.body;
+            }
             core.info(`Using body '${body}'`);
             // Create PR
             const pull = yield octokit.pulls.create({
@@ -65,23 +75,26 @@ function createPullRequest(inputs, prBranch) {
                 body
             });
             // Apply labels
-            if (inputs.labels.length > 0) {
+            const appliedLabels = inputs.labels;
+            if (inputs.inherit_labels) {
                 const prLabels = github.context.payload &&
                     github.context.payload.pull_request &&
                     github.context.payload.pull_request.labels;
                 if (prLabels) {
                     for (const item of prLabels) {
                         if (item.name !== inputs.branch) {
-                            inputs.labels.push(item.name);
+                            appliedLabels.push(item.name);
                         }
                     }
                 }
-                core.info(`Applying labels '${inputs.labels}'`);
+            }
+            if (appliedLabels.length > 0) {
+                core.info(`Applying labels '${appliedLabels}'`);
                 yield octokit.issues.addLabels({
                     owner,
                     repo,
                     issue_number: pull.data.number,
-                    labels: inputs.labels
+                    labels: appliedLabels
                 });
             }
             // Apply assignees
@@ -180,7 +193,10 @@ function run() {
                 committer: core.getInput('committer'),
                 author: core.getInput('author'),
                 branch: core.getInput('branch'),
+                title: core.getInput('title'),
+                body: core.getInput('body'),
                 labels: utils.getInputAsArray('labels'),
+                inherit_labels: utils.getInputAsBoolean('inherit_labels'),
                 assignees: utils.getInputAsArray('assignees'),
                 reviewers: utils.getInputAsArray('reviewers'),
                 teamReviewers: utils.getInputAsArray('teamReviewers')
@@ -304,12 +320,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.parseDisplayNameEmail = exports.getStringAsArray = exports.getInputAsArray = void 0;
+exports.parseDisplayNameEmail = exports.getStringAsArray = exports.getInputAsBoolean = exports.getInputAsArray = void 0;
 const core = __importStar(__webpack_require__(2186));
 function getInputAsArray(name, options) {
     return getStringAsArray(core.getInput(name, options));
 }
 exports.getInputAsArray = getInputAsArray;
+function getInputAsBoolean(name, options) {
+    try {
+        return JSON.parse(core.getInput(name, options));
+    }
+    catch (e) {
+        return undefined;
+    }
+}
+exports.getInputAsBoolean = getInputAsBoolean;
 function getStringAsArray(str) {
     return str
         .split(/[\n,]+/)

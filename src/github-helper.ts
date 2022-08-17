@@ -9,7 +9,10 @@ export interface Inputs {
   committer: string
   author: string
   branch: string
+  title?: string
+  body?: string
   labels: string[]
+  inherit_labels?: boolean
   assignees: string[]
   reviewers: string[]
   teamReviewers: string[]
@@ -24,17 +27,25 @@ export async function createPullRequest(
     const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
 
     // Get PR title
-    const title =
-      github.context.payload &&
-      github.context.payload.pull_request &&
-      github.context.payload.pull_request.title
-    core.info(`Using body '${title}'`)
+    core.info(`Input title is '${inputs.title}'`)
+    let title = inputs.title
+    if (title === undefined || title === '') {
+      title =
+        github.context.payload &&
+        github.context.payload.pull_request &&
+        github.context.payload.pull_request.title
+    }
+    core.info(`Using title '${title}'`)
 
     // Get PR body
-    const body =
-      github.context.payload &&
-      github.context.payload.pull_request &&
-      github.context.payload.pull_request.body
+    core.info(`Input body is '${inputs.body}'`)
+    let body = inputs.body
+    if (body === undefined || body === '') {
+      body =
+        github.context.payload &&
+        github.context.payload.pull_request &&
+        github.context.payload.pull_request.body
+    }
     core.info(`Using body '${body}'`)
 
     // Create PR
@@ -48,26 +59,28 @@ export async function createPullRequest(
     })
 
     // Apply labels
-    if (inputs.labels.length > 0) {
+    const appliedLabels = inputs.labels
+
+    if (inputs.inherit_labels) {
       const prLabels =
         github.context.payload &&
         github.context.payload.pull_request &&
         github.context.payload.pull_request.labels
-
       if (prLabels) {
         for (const item of prLabels) {
           if (item.name !== inputs.branch) {
-            inputs.labels.push(item.name)
+            appliedLabels.push(item.name)
           }
         }
       }
-
-      core.info(`Applying labels '${inputs.labels}'`)
+    }
+    if (appliedLabels.length > 0) {
+      core.info(`Applying labels '${appliedLabels}'`)
       await octokit.issues.addLabels({
         owner,
         repo,
         issue_number: pull.data.number,
-        labels: inputs.labels
+        labels: appliedLabels
       })
     }
 

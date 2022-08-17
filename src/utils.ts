@@ -7,6 +7,17 @@ export function getInputAsArray(
   return getStringAsArray(core.getInput(name, options))
 }
 
+export function getInputAsBoolean(
+  name: string,
+  options?: core.InputOptions
+): boolean | undefined {
+  try {
+    return JSON.parse(core.getInput(name, options))
+  } catch (e) {
+    return undefined
+  }
+}
+
 export function getStringAsArray(str: string): string[] {
   return str
     .split(/[\n,]+/)

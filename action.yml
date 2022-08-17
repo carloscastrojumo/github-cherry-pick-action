@@ -20,9 +20,19 @@ inputs:
   branch:
     description: "Name of the branch to merge the cherry pick"
     required: true
+  title:
+    description: "Override the default generated PR title"
+    required: false
+  body:
+    description: "Override the default generated PR body"
+    required: false
   labels:
     description: "A comma or newline separated list of labels."
     required: false
+  inherit_labels:
+    description: "Set to false if you want to inherit labels from parent PR"
+    required: false
+    default: "true"
   assignees:
     description: "A comma or newline separated list of assignees (GitHub usernames)."
     required: false
