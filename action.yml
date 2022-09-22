@@ -21,10 +21,14 @@ inputs:
     description: "Name of the branch to merge the cherry pick"
     required: true
   title:
-    description: "Override the default generated PR title"
+    description: >
+      Override the default generated PR title, the special string `{old_title}` will be substituted for
+      the title of the pull request which triggered the action.
     required: false
   body:
-    description: "Override the default generated PR body"
+    description: >
+      Override the default generated PR body, the special string `{old_pull_request_id}` will be substituted
+      for the ID of the pull request which triggered the action
     required: false
   labels:
     description: "A comma or newline separated list of labels."
