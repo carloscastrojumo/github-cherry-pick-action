@@ -43,26 +43,36 @@ const ERROR_PR_REVIEW_FROM_AUTHOR = 'Review cannot be requested from pull reques
 function createPullRequest(inputs, prBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = github.getOctokit(inputs.token);
+        if (!github.context.payload) {
+            core.info(`Error: no payload in github.context`);
+            return;
+        }
+        const pull_request = github.context.payload.pull_request;
         if (process.env.GITHUB_REPOSITORY !== undefined) {
             const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
             // Get PR title
             core.info(`Input title is '${inputs.title}'`);
             let title = inputs.title;
             if (title === undefined || title === '') {
-                title =
-                    github.context.payload &&
-                        github.context.payload.pull_request &&
-                        github.context.payload.pull_request.title;
+                title = pull_request.title;
+            }
+            else {
+                // if the title comes from inputs, we replace {old_title}
+                // so use users can set `title: 'Cherry pick: {old_title}`
+                const old_title = pull_request.title;
+                title = title.replace('{old_title}', old_title);
             }
             core.info(`Using title '${title}'`);
             // Get PR body
             core.info(`Input body is '${inputs.body}'`);
             let body = inputs.body;
             if (body === undefined || body === '') {
-                body =
-                    github.context.payload &&
-                        github.context.payload.pull_request &&
-                        github.context.payload.pull_request.body;
+                body = pull_request.body;
+            }
+            else {
+                // if the body comes from inputs, we replace {old_pull_request_id}
+                const old_pr_number = pull_request.number;
+                body = body.replace('{old_pull_request_id}', old_pr_number.toString());
             }
             core.info(`Using body '${body}'`);
             // Create PR
@@ -77,9 +87,7 @@ function createPullRequest(inputs, prBranch) {
             // Apply labels
             const appliedLabels = inputs.labels;
             if (inputs.inherit_labels) {
-                const prLabels = github.context.payload &&
-                    github.context.payload.pull_request &&
-                    github.context.payload.pull_request.labels;
+                const prLabels = pull_request.labels;
                 if (prLabels) {
                     for (const item of prLabels) {
                         if (item.name !== inputs.branch) {
