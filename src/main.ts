@@ -20,12 +20,13 @@ export async function run(): Promise<void> {
       inherit_labels: utils.getInputAsBoolean('inherit_labels'),
       assignees: utils.getInputAsArray('assignees'),
       reviewers: utils.getInputAsArray('reviewers'),
-      teamReviewers: utils.getInputAsArray('teamReviewers')
+      teamReviewers: utils.getInputAsArray('teamReviewers'),
+      GITHUB_SHA : core.getInput('GITHUB_SHA')
     }
 
     core.info(`Cherry pick into branch ${inputs.branch}!`)
 
-    const githubSha = process.env.GITHUB_SHA
+    const githubSha = inputs.GITHUB_SHA
     const prBranch = `cherry-pick-${inputs.branch}-${githubSha}`
 
     // Configure the committer and author
