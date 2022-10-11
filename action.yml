@@ -44,6 +44,9 @@ inputs:
       A comma or newline separated list of GitHub teams to request a review from.
       Note that a `repo` scoped Personal Access Token (PAT) may be required.
     required: false
+  GITHUB_SHA:
+    description: "Github SHA"
+    required: true
 runs:
   using: node12
   main: dist/index.js
