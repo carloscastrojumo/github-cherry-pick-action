@@ -16,6 +16,7 @@ export interface Inputs {
   assignees: string[]
   reviewers: string[]
   teamReviewers: string[]
+  GITHUB_SHA : string
 }
 
 export async function createPullRequest(
