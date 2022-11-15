@@ -143,6 +143,7 @@ function createPullRequest(inputs, prBranch) {
                     throw e;
                 }
             }
+            return pull;
         }
     });
 }
@@ -256,7 +257,10 @@ function run() {
             core.endGroup();
             // Create pull request
             core.startGroup('Opening pull request');
-            yield github_helper_1.createPullRequest(inputs, prBranch);
+            const pull = yield github_helper_1.createPullRequest(inputs, prBranch);
+            core.setOutput("data", JSON.stringify(pull.data));
+            core.setOutput("number", pull.data.number);
+            core.setOutput("html_url", pull.data.html_url);
             core.endGroup();
         }
         catch (error) {

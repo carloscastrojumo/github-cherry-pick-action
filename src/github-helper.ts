@@ -23,7 +23,7 @@ export interface Inputs {
 export async function createPullRequest(
   inputs: Inputs,
   prBranch: string
-): Promise<void> {
+): Promise<any> {
   const octokit = github.getOctokit(inputs.token)
   if (!github.context.payload) {
     core.info(`Error: no payload in github.context`)
@@ -131,5 +131,6 @@ export async function createPullRequest(
         throw e
       }
     }
+    return pull
   }
 }
