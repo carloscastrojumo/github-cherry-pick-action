@@ -60,6 +60,8 @@ jobs:
             cherry-pick
           reviewers: |
             aReviewerUser
+          title: '[cherry-pick] {old_title}'
+          body: 'Cherry picking #{old_pull_request_id} onto this branch'
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -84,16 +86,18 @@ Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03
 
 ### Action inputs
 
-| Name | Description | Default |
-| --- | --- | --- |
-| `token` | `GITHUB_TOKEN` or a `repo` scoped [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). | `GITHUB_TOKEN` |
-| `committer` | The committer name and email address in the format `Display Name <email@address.com>`. Defaults to the GitHub Actions bot user. | `GitHub <noreply@github.com>` |
-| `author` | The author name and email address in the format `Display Name <email@address.com>`. Defaults to the user who triggered the workflow run. | `${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>` |
-| `branch` | Name of the branch to merge the cherry pick. | `create-pull-request/patch` |
-| `labels` | A comma or newline-separated list of labels. | |
-| `assignees` | A comma or newline-separated list of assignees (GitHub usernames). | |
-| `reviewers` | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from. | |
-| `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. | |
+| Name             | Description                                                                                                                                                                                                               | Default                                                              |
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| `token`          | `GITHUB_TOKEN` or a `repo` scoped [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).                                                             | `GITHUB_TOKEN`                                                       |
+| `committer`      | The committer name and email address in the format `Display Name <email@address.com>`. Defaults to the GitHub Actions bot user.                                                                                           | `GitHub <noreply@github.com>`                                        |
+| `author`         | The author name and email address in the format `Display Name <email@address.com>`. Defaults to the user who triggered the workflow run.                                                                                  | `${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>` |
+| `branch`         | Name of the branch to merge the cherry pick.                                                                                                                                                                              | `create-pull-request/patch`                                          |
+| `labels`         | A comma or newline-separated list of labels.                                                                                                                                                                              |                                                                      |
+| `assignees`      | A comma or newline-separated list of assignees (GitHub usernames).                                                                                                                                                        |                                                                      |
+| `reviewers`      | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from.                                                                                                                               |                                                                      |
+| `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. |                                                                      |
+| `title`          | Title of the new pull request, the special string `{old_title}` will be substituted for the title of the pull request which triggered the action                                                                          | [Triggering pull request title]                                      |
+| `body`           | Body of the new pull request, the special string `{old_pull_request_id}` will be substituted for the ID of the pull request which triggered the action                                                                    | [Triggering pull request body]                                       |
 
 ## License
 

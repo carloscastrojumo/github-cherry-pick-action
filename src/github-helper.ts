@@ -1,5 +1,6 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
+import {PullRequest} from '@octokit/webhooks-definitions/schema'
 
 const ERROR_PR_REVIEW_FROM_AUTHOR =
   'Review cannot be requested from pull request author'
@@ -23,6 +24,11 @@ export async function createPullRequest(
   prBranch: string
 ): Promise<void> {
   const octokit = github.getOctokit(inputs.token)
+  if (!github.context.payload) {
+    core.info(`Error: no payload in github.context`)
+    return
+  }
+  const pull_request = github.context.payload.pull_request as PullRequest
   if (process.env.GITHUB_REPOSITORY !== undefined) {
     const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
 
@@ -30,10 +36,11 @@ export async function createPullRequest(
     core.info(`Input title is '${inputs.title}'`)
     let title = inputs.title
     if (title === undefined || title === '') {
-      title =
-        github.context.payload &&
-        github.context.payload.pull_request &&
-        github.context.payload.pull_request.title
+      title = pull_request.title
+    } else {
+      // if the title comes from inputs, we replace {old_title}
+      // so use users can set `title: 'Cherry pick: {old_title}`
+      title = title.replace('{old_title}', pull_request.title)
     }
     core.info(`Using title '${title}'`)
 
@@ -41,10 +48,14 @@ export async function createPullRequest(
     core.info(`Input body is '${inputs.body}'`)
     let body = inputs.body
     if (body === undefined || body === '') {
-      body =
-        github.context.payload &&
-        github.context.payload.pull_request &&
-        github.context.payload.pull_request.body
+      body = pull_request.body
+    } else {
+      // if the body comes from inputs, we replace {old_pull_request_id}
+      // to make it easy to reference the previous pull request in the new
+      body = body.replace(
+        '{old_pull_request_id}',
+        pull_request.number.toString()
+      )
     }
     core.info(`Using body '${body}'`)
 
@@ -62,10 +73,7 @@ export async function createPullRequest(
     const appliedLabels = inputs.labels
 
     if (inputs.inherit_labels) {
-      const prLabels =
-        github.context.payload &&
-        github.context.payload.pull_request &&
-        github.context.payload.pull_request.labels
+      const prLabels = pull_request.labels
       if (prLabels) {
         for (const item of prLabels) {
           if (item.name !== inputs.branch) {
