@@ -48,6 +48,9 @@ inputs:
       A comma or newline separated list of GitHub teams to request a review from.
       Note that a `repo` scoped Personal Access Token (PAT) may be required.
     required: false
+  cherry-pick-branch:
+    description: "Name of the new cherry pick branch."
+    required: false
 runs:
   using: node12
   main: dist/index.js

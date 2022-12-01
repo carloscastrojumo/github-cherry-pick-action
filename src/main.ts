@@ -20,13 +20,16 @@ export async function run(): Promise<void> {
       inherit_labels: utils.getInputAsBoolean('inherit_labels'),
       assignees: utils.getInputAsArray('assignees'),
       reviewers: utils.getInputAsArray('reviewers'),
-      teamReviewers: utils.getInputAsArray('teamReviewers')
+      teamReviewers: utils.getInputAsArray('teamReviewers'),
+      cherryPickBranch: core.getInput('cherry-pick-branch')
     }
 
     core.info(`Cherry pick into branch ${inputs.branch}!`)
 
     const githubSha = process.env.GITHUB_SHA
-    const prBranch = `cherry-pick-${inputs.branch}-${githubSha}`
+    const prBranch = inputs.cherryPickBranch
+      ? inputs.cherryPickBranch
+      : `cherry-pick-${inputs.branch}-${githubSha}`
 
     // Configure the committer and author
     core.startGroup('Configuring the committer and author')
@@ -51,7 +54,7 @@ export async function run(): Promise<void> {
     core.endGroup()
 
     // Create branch new branch
-    core.startGroup(`Create new branch from ${inputs.branch}`)
+    core.startGroup(`Create new branch ${prBranch} from ${inputs.branch}`)
     await gitExecution(['checkout', '-b', prBranch, `origin/${inputs.branch}`])
     core.endGroup()
 
@@ -120,4 +123,7 @@ class GitOutput {
   exitCode = 0
 }
 
-run()
+// do not run if imported as module
+if (require.main === module) {
+  run()
+}
