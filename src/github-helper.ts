@@ -17,6 +17,7 @@ export interface Inputs {
   assignees: string[]
   reviewers: string[]
   teamReviewers: string[]
+  cherryPickBranch?: string
 }
 
 export async function createPullRequest(
