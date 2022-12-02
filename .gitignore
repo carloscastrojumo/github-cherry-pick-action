@@ -100,3 +100,6 @@ lib/**/*
 
 # VSCode files
 .vscode
+
+test/
+test_act.yml
