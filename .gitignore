@@ -101,5 +101,5 @@ lib/**/*
 # VSCode files
 .vscode
 
-test/
+local/
 test_act.yml
