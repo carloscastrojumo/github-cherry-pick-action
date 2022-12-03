@@ -12,3 +12,4 @@ jobs:
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
           valid-labels: 'bug, enhancement, maintenance'
+          pull-request-number: '${{ github.event.pull_request.number }}'
