@@ -98,6 +98,7 @@ Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03
 | `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. |                                                                      |
 | `title`          | Title of the new pull request, the special string `{old_title}` will be substituted for the title of the pull request which triggered the action                                                                          | [Triggering pull request title]                                      |
 | `body`           | Body of the new pull request, the special string `{old_pull_request_id}` will be substituted for the ID of the pull request which triggered the action                                                                    | [Triggering pull request body]                                       |
+| `cherry-pick-branch`           | Name of the new cherry pick branch                                                                    | `cherry-pick-${inputs.branch}-${commitSha}`                                      |
 
 ## License
 

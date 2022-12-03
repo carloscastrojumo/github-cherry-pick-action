@@ -59,8 +59,7 @@ function createPullRequest(inputs, prBranch) {
             else {
                 // if the title comes from inputs, we replace {old_title}
                 // so use users can set `title: 'Cherry pick: {old_title}`
-                const old_title = pull_request.title;
-                title = title.replace('{old_title}', old_title);
+                title = title.replace('{old_title}', pull_request.title);
             }
             core.info(`Using title '${title}'`);
             // Get PR body
@@ -71,8 +70,8 @@ function createPullRequest(inputs, prBranch) {
             }
             else {
                 // if the body comes from inputs, we replace {old_pull_request_id}
-                const old_pr_number = pull_request.number;
-                body = body.replace('{old_pull_request_id}', old_pr_number.toString());
+                // to make it easy to reference the previous pull request in the new
+                body = body.replace('{old_pull_request_id}', pull_request.number.toString());
             }
             core.info(`Using body '${body}'`);
             // Create PR
@@ -207,11 +206,14 @@ function run() {
                 inherit_labels: utils.getInputAsBoolean('inherit_labels'),
                 assignees: utils.getInputAsArray('assignees'),
                 reviewers: utils.getInputAsArray('reviewers'),
-                teamReviewers: utils.getInputAsArray('teamReviewers')
+                teamReviewers: utils.getInputAsArray('teamReviewers'),
+                cherryPickBranch: core.getInput('cherry-pick-branch')
             };
             core.info(`Cherry pick into branch ${inputs.branch}!`);
             const githubSha = process.env.GITHUB_SHA;
-            const prBranch = `cherry-pick-${inputs.branch}-${githubSha}`;
+            const prBranch = inputs.cherryPickBranch
+                ? inputs.cherryPickBranch
+                : `cherry-pick-${inputs.branch}-${githubSha}`;
             // Configure the committer and author
             core.startGroup('Configuring the committer and author');
             const parsedAuthor = utils.parseDisplayNameEmail(inputs.author);
@@ -231,7 +233,7 @@ function run() {
             yield gitExecution(['fetch', '--all']);
             core.endGroup();
             // Create branch new branch
-            core.startGroup(`Create new branch from ${inputs.branch}`);
+            core.startGroup(`Create new branch ${prBranch} from ${inputs.branch}`);
             yield gitExecution(['checkout', '-b', prBranch, `origin/${inputs.branch}`]);
             core.endGroup();
             // Cherry pick
@@ -298,7 +300,10 @@ class GitOutput {
         this.exitCode = 0;
     }
 }
-run();
+// do not run if imported as module
+if (require.main === require.cache[eval('__filename')]) {
+    run();
+}
 
 
 /***/ }),
