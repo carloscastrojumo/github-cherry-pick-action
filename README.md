@@ -66,6 +66,20 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+### Using outputs:
+```yml
+steps:
+  - uses: actions/checkout@v3
+  - uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+    id: new-issue
+    with:
+      branch: release-v2.0
+      labels: cherry-pick
+    - run: |
+        echo "${{ steps.new-issue.outputs.data }}"
+        echo "${{ steps.new-issue.outputs.number }}" 
+        echo "${{ steps.new-issue.outputs.html_url }}"
+```
 ### Working with forked repositories
 
 If you are using this action while working with forked repositories (e.g. when you get pull requests from external contributors), you will have to adapt the trigger to avoid permission problems.
@@ -99,6 +113,14 @@ Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03
 | `title`          | Title of the new pull request, the special string `{old_title}` will be substituted for the title of the pull request which triggered the action                                                                          | [Triggering pull request title]                                      |
 | `body`           | Body of the new pull request, the special string `{old_pull_request_id}` will be substituted for the ID of the pull request which triggered the action                                                                    | [Triggering pull request body]                                       |
 | `cherry-pick-branch`           | Name of the new cherry pick branch                                                                    | `cherry-pick-${inputs.branch}-${commitSha}`                                      |
+
+### Action outputs
+
+| output   | value |
+|----------| ----- |
+| data     | [See Response](https://docs.github.com/en/rest/issues/issues#create-an-issue) |
+| html_url | the issue's web url |
+| number   | the issue's number |
 
 ## License
 
