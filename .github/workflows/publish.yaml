@@ -1,0 +1,33 @@
+##
+# Publish new action tag(s) for downstream consumption
+##
+name: Publish
+
+# Manual or automatic release
+on:
+  release:
+    types: [published, edited]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # Release with semantic tag like v1.0.3
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+
+      - name: Test and Build
+        run: |
+            npm ci && npm run all
+      # Compile dist/index.js and bundle with action.yml
+      # Force push major and minor tags, e.g. v1, v1.0
+      # See documentation: https://github.com/JasonEtco/build-and-tag-action
+      - name: Publish Release
+        uses: JasonEtco/build-and-tag-action@v2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
