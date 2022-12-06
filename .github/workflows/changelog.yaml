@@ -1,31 +1,16 @@
-name: Changelog
+name: Release Management
 
 on:
   push:
-    tags:
-      - 'v*'
+    # branches to consider in the event; optional, defaults to all
+    branches:
+      - master
 
 jobs:
-  release:
-    if: startsWith(github.ref, 'refs/tags/')
+  update_draft_release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: "Build Changelog"
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@main
-        with:
-          configuration: ".github/configuration.json"
+      # Drafts your next Release notes as Pull Requests are merged into "master"
+      - uses: toolmantim/release-drafter@v5.2.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: ${{steps.github_release.outputs.changelog}}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_WRITER }}

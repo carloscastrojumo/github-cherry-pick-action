@@ -124,11 +124,13 @@ export async function createPullRequest(
           team_reviewers: inputs.teamReviewers
         })
       }
-    } catch (e) {
-      if (e.message && e.message.includes(ERROR_PR_REVIEW_FROM_AUTHOR)) {
-        core.warning(ERROR_PR_REVIEW_FROM_AUTHOR)
-      } else {
-        throw e
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        if (e.message && e.message.includes(ERROR_PR_REVIEW_FROM_AUTHOR)) {
+          core.warning(ERROR_PR_REVIEW_FROM_AUTHOR)
+        } else {
+          throw e
+        }
       }
     }
     return pull
