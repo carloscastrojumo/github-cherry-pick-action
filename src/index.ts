@@ -81,12 +81,14 @@ export async function run(): Promise<void> {
     // Create pull request
     core.startGroup('Opening pull request')
     const pull = await createPullRequest(inputs, prBranch)
-    core.setOutput("data", JSON.stringify(pull.data));
-    core.setOutput("number", pull.data.number);
-    core.setOutput("html_url", pull.data.html_url);
+    core.setOutput('data', JSON.stringify(pull.data))
+    core.setOutput('number', pull.data.number)
+    core.setOutput('html_url', pull.data.html_url)
     core.endGroup()
-  } catch (error) {
-    core.setFailed(error.message)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      core.setFailed(err)
+    }
   }
 }
 

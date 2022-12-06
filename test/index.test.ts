@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import {run} from '../src/main'
-import {createPullRequest} from '../src/github-helper'
+import {run} from '../src/index'
+import {createPullRequest, Inputs} from '../src/github-helper'
 
 const defaultMockedGetInputData: any = {
   token: 'whatever',
@@ -9,6 +9,10 @@ const defaultMockedGetInputData: any = {
   committer: 'Someone <someone@mail.com>',
   branch: 'target-branch',
   'cherry-pick-branch': ''
+}
+
+const mockedCreatePullRequestOutputData: any = {
+  data: '{\n  "number" : "54"\n}'
 }
 
 let mockedGetInputData: any = defaultMockedGetInputData
@@ -25,6 +29,9 @@ jest.mock('@actions/core', () => {
     endGroup: jest.fn(),
     getInput: jest.fn().mockImplementation((name: string) => {
       return name in mockedGetInputData ? mockedGetInputData[name] : ''
+    }),
+    setOutput: jest.fn().mockImplementation(() => {
+      return mockedCreatePullRequestOutputData
     })
   }
 })
@@ -36,7 +43,13 @@ jest.mock('@actions/exec', () => {
   }
 })
 
-jest.mock('../src/github-helper')
+jest.mock('../src/github-helper', () => {
+  return {
+    createPullRequest: jest.fn().mockImplementation(() => {
+      return mockedCreatePullRequestOutputData
+    })
+  }
+})
 
 describe('run main', () => {
   beforeEach(() => {
