@@ -16,6 +16,7 @@ export async function run(): Promise<void> {
       branch: core.getInput('branch'),
       title: core.getInput('title'),
       body: core.getInput('body'),
+      force: utils.getInputAsBoolean('force'),
       labels: utils.getInputAsArray('labels'),
       inherit_labels: utils.getInputAsBoolean('inherit_labels'),
       assignees: utils.getInputAsArray('assignees'),
@@ -75,7 +76,13 @@ export async function run(): Promise<void> {
 
     // Push new branch
     core.startGroup('Push new branch to remote')
-    await gitExecution(['push', '-u', 'origin', `${prBranch}`])
+    if (inputs.force) {
+      await gitExecution(['push', '-u', 'origin', `${prBranch}`, '--force'])
+    }
+    else
+    {
+      await gitExecution(['push', '-u', 'origin', `${prBranch}`])
+    }
     core.endGroup()
 
     // Create pull request
