@@ -29,7 +29,7 @@ jobs:
   cherry_pick_release_v1_0:
     runs-on: ubuntu-latest
     name: Cherry pick into release-v1.0
-    if: contains(github.event.pull_request.labels.*.name, 'release-v1.0')
+    if: contains(github.event.pull_request.labels.*.name, 'release-v1.0') && github.event.pull_request.merged == true
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
   cherry_pick_release_v2_0:
     runs-on: ubuntu-latest
     name: Cherry pick into release-v2.0
-    if: contains(github.event.pull_request.labels.*.name, 'release-v2.0')
+    if: contains(github.event.pull_request.labels.*.name, 'release-v2.0') && github.event.pull_request.merged == true
     steps:
       - name: Checkout
         uses: actions/checkout@v2
