@@ -62,7 +62,7 @@ export async function createPullRequest(
     core.info(`Using body '${body}'`)
 
     // Create PR
-    const pull = await octokit.pulls.create({
+    const pull = await octokit.rest.pulls.create({
       owner,
       repo,
       head: prBranch,
@@ -86,7 +86,7 @@ export async function createPullRequest(
     }
     if (appliedLabels.length > 0) {
       core.info(`Applying labels '${appliedLabels}'`)
-      await octokit.issues.addLabels({
+      await octokit.rest.issues.addLabels({
         owner,
         repo,
         issue_number: pull.data.number,
@@ -97,7 +97,7 @@ export async function createPullRequest(
     // Apply assignees
     if (inputs.assignees.length > 0) {
       core.info(`Applying assignees '${inputs.assignees}'`)
-      await octokit.issues.addAssignees({
+      await octokit.rest.issues.addAssignees({
         owner,
         repo,
         issue_number: pull.data.number,
@@ -109,7 +109,7 @@ export async function createPullRequest(
     try {
       if (inputs.reviewers.length > 0) {
         core.info(`Requesting reviewers '${inputs.reviewers}'`)
-        await octokit.pulls.requestReviewers({
+        await octokit.rest.pulls.requestReviewers({
           owner,
           repo,
           pull_number: pull.data.number,
@@ -118,7 +118,7 @@ export async function createPullRequest(
       }
       if (inputs.teamReviewers.length > 0) {
         core.info(`Requesting team reviewers '${inputs.teamReviewers}'`)
-        await octokit.pulls.requestReviewers({
+        await octokit.rest.pulls.requestReviewers({
           owner,
           repo,
           pull_number: pull.data.number,
