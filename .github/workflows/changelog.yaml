@@ -10,10 +10,6 @@ jobs:
   update_draft_release:
     runs-on: ubuntu-latest
     steps:
-<<<<<<< Updated upstream
-      # Drafts your next Release notes as Pull Requests are merged into "master"
-=======
->>>>>>> Stashed changes
       - uses: toolmantim/release-drafter@v5.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
