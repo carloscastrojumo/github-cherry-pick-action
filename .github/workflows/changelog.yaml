@@ -2,7 +2,6 @@ name: Release Management
 
 on:
   push:
-    # branches to consider in the event; optional, defaults to all
     branches:
       - main
 
@@ -10,22 +9,6 @@ jobs:
   update_draft_release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: "Build Changelog"
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@main
-        with:
-          configuration: ".github/configuration.json"
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-
-      - name: Create Release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: ${{steps.github_release.outputs.changelog}}
+      - uses: toolmantim/release-drafter@v5.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
