@@ -78,9 +78,7 @@ export async function run(): Promise<void> {
     core.startGroup('Push new branch to remote')
     if (inputs.force) {
       await gitExecution(['push', '-u', 'origin', `${prBranch}`, '--force'])
-    }
-    else
-    {
+    } else {
       await gitExecution(['push', '-u', 'origin', `${prBranch}`])
     }
     core.endGroup()
