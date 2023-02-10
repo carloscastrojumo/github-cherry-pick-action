@@ -14,6 +14,8 @@ GitHub Cherry Pick Action will:
 - Push new `branch` to remote
 - Open pull request to `branch`
 
+> *NOTE:* The `GITHUB_SHA` is taken from the GitHub context, specifically from the `merge_commit_sha` attribute of the pull request object.
+
 ## Example
 
 Cherry-picking pull requests merged on main to branch *release-v1.0* in pull requests labeled with **release-v1.0** and to branch *release-v2.0* in pull requests labeled with **release-v2.0**.

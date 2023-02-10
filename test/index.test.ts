@@ -1,7 +1,8 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import {run} from '../src/index'
-import {createPullRequest, Inputs} from '../src/github-helper'
+import {createPullRequest} from '../src/github-helper'
+import { PullRequest } from '@octokit/webhooks-definitions/schema'
 
 const defaultMockedGetInputData: any = {
   token: 'whatever',
@@ -43,6 +44,18 @@ jest.mock('@actions/exec', () => {
   }
 })
 
+jest.mock('@actions/github', () => {
+  return {
+    context: {
+      payload: {
+        pull_request: {
+          merge_commit_sha: 'XXXXXX'
+        } as PullRequest
+      }
+    }
+  }
+})
+
 jest.mock('../src/github-helper', () => {
   return {
     createPullRequest: jest.fn().mockImplementation(() => {
@@ -53,7 +66,6 @@ jest.mock('../src/github-helper', () => {
 
 describe('run main', () => {
   beforeEach(() => {
-    process.env.GITHUB_SHA = 'xxxxxxxxxx'
     mockedGetInputData = defaultMockedGetInputData
   })
 
@@ -86,7 +98,7 @@ describe('run main', () => {
   test('valid execution with default new branch', async () => {
     await run()
 
-    commonChecks('target-branch', 'cherry-pick-target-branch-xxxxxxxxxx')
+    commonChecks('target-branch', 'cherry-pick-target-branch-XXXXXX')
 
     expect(createPullRequest).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -99,7 +111,7 @@ describe('run main', () => {
         reviewers: [],
         cherryPickBranch: ''
       }),
-      'cherry-pick-target-branch-xxxxxxxxxx'
+      'cherry-pick-target-branch-XXXXXX'
     )
   })
 
