@@ -23,7 +23,7 @@ export async function run(): Promise<void> {
       inherit_labels: utils.getInputAsBoolean('inherit_labels'),
       assignees: utils.getInputAsArray('assignees'),
       reviewers: utils.getInputAsArray('reviewers'),
-      teamReviewers: utils.getInputAsArray('teamReviewers'),
+      teamReviewers: utils.getInputAsArray('team-reviewers'),
       cherryPickBranch: core.getInput('cherry-pick-branch')
     }
 
