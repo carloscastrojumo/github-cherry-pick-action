@@ -1,4 +1,5 @@
-module.exports = {
+import {Config} from 'jest'
+export default {
   clearMocks: true,
   moduleFileExtensions: ['js', 'ts'],
   testEnvironment: 'node',
@@ -8,4 +9,4 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest'
   },
   verbose: true
-}
+} satisfies Config

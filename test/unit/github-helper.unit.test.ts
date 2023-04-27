@@ -13,8 +13,7 @@ describe('buildBranchesFromLabels', () => {
             id: 4347407246,
             name: 'CP v1.0.0',
             node_id: 'LA_kwDOHsKN7M8AAAABAyArjg',
-            url:
-              'https://api.github.com/repos/arivera-xealth/sample-repo/labels/CP%20v1.0.0'
+            url: 'https://api.github.com/repos/arivera-xealth/sample-repo/labels/CP%20v1.0.0'
           },
           {
             color: 'A1F2AD',
@@ -23,8 +22,7 @@ describe('buildBranchesFromLabels', () => {
             id: 4347407246,
             name: 'CP v2.0.0',
             node_id: 'LA_kwDOHsKN7M8AAAABAyArjg',
-            url:
-              'https://api.github.com/repos/arivera-xealth/sample-repo/labels/CP%20v1.0.0'
+            url: 'https://api.github.com/repos/arivera-xealth/sample-repo/labels/CP%20v1.0.0'
           }
         ],
         number: 200

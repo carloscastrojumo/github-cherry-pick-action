@@ -23,7 +23,6 @@ export type Statuses = {
   completedCherryPicks: ExecutionStatus[]
   cherryPickErrors: ExecutionStatus[]
 }
-
 export async function run(): Promise<void> {
   const inputs: Inputs = {
     token: core.getInput('token'),
@@ -55,14 +54,13 @@ export async function run(): Promise<void> {
   for (const branch of branchesToCherryPick) {
     try {
       executions.push(await cherryPickExecution(inputs, branch))
-    } catch (e: any) {
-      executions.push(e)
+    } catch (e: unknown) {
+      executions.push(e as ExecutionStatus)
     }
   }
 
-  const {completedCherryPicks, cherryPickErrors} = filterExecutionStatuses(
-    executions
-  )
+  const {completedCherryPicks, cherryPickErrors} =
+    filterExecutionStatuses(executions)
 
   core.info(`Finished cherry picking ${JSON.stringify(completedCherryPicks)}!`)
   core.info(`Failed to cherry pick ${JSON.stringify(cherryPickErrors)}`)
@@ -104,6 +102,9 @@ async function cherryPickExecution(
     core.info(`Cherry pick into branch ${branch}!`)
 
     const githubSha = process.env.GITHUB_SHA
+    if (!githubSha) {
+      throw Error('no github SHA found')
+    }
     const prBranch = `cherry-pick-${branch}-${githubSha}`
 
     // Configure the committer and author
@@ -158,13 +159,16 @@ async function cherryPickExecution(
     await createPullRequest(inputs, prBranch, branch)
     core.endGroup()
     return {branch, failed: false}
-  } catch (error: any) {
-    return {
-      branch,
-      failed: true,
-      inputs,
-      msg: core.setFailed(error.message)
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return {
+        branch,
+        failed: true,
+        inputs,
+        msg: core.setFailed(e.message)
+      }
     }
+    throw e
   }
 }
 
@@ -204,4 +208,5 @@ class GitOutput {
   exitCode = 0
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 run()
