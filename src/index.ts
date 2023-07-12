@@ -70,7 +70,6 @@ export async function run(): Promise<void> {
       '-m',
       '1',
       '--strategy=recursive',
-      '--strategy-option=theirs',
       `${githubSha}`
     ])
     if (result.exitCode !== 0 && !result.stderr.includes(CHERRYPICK_EMPTY)) {
