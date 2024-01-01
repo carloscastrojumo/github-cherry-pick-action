@@ -11,6 +11,7 @@ const CHERRYPICK_EMPTY =
 
 const CHERRYPICK_CONFLICT =
   'CONFLICT (content): Merge conflict'
+
 export async function run(): Promise<void> {
   try {
     const inputs: Inputs = {
