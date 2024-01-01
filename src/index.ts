@@ -9,6 +9,8 @@ import { PullRequest } from '@octokit/webhooks-definitions/schema'
 const CHERRYPICK_EMPTY =
   'The previous cherry-pick is now empty, possibly due to conflict resolution.'
 
+const CHERRYPICK_CONFLICT =
+  'CONFLICT (content): Merge conflict'
 export async function run(): Promise<void> {
   try {
     const inputs: Inputs = {
@@ -72,6 +74,13 @@ export async function run(): Promise<void> {
       '--strategy=recursive',
       `${githubSha}`
     ])
+
+
+    if(result.exitCode !== 0 && result.stderr.includes(CHERRYPICK_CONFLICT)) {
+      await gitExecution(['add', '*'])
+      await gitExecution(['commit', '-m', 'Cherry picking with conflicts'])
+    }
+
     if (result.exitCode !== 0 && !result.stderr.includes(CHERRYPICK_EMPTY)) {
       throw new Error(`Unexpected error: ${result.stderr}`)
     }
