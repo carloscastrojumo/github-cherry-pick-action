@@ -68,23 +68,27 @@ export async function run(): Promise<void> {
 
     // Cherry pick
     core.startGroup('Cherry picking')
-    const result = await gitExecution([
-      'cherry-pick',
-      '-m',
-      '1',
-      '--strategy=recursive',
-      `${githubSha}`
-    ])
-
-    core.info(`Cherry pick finished with exit code ${result.exitCode}`)
-
-    if(result.exitCode !== 0 && (result.stderr.includes(CHERRYPICK_CONFLICT) || result.stdout.includes(CHERRYPICK_CONFLICT))) {
-      await gitExecution(['add', '*'])
-      await gitExecution(['commit', '-m', 'Cherry picking with conflicts'])
+    try {
+      const result = await gitExecution([
+        'cherry-pick',
+        '-m',
+        '1',
+        '--strategy=recursive',
+        `${githubSha}`
+      ])
+      if (result.exitCode !== 0 && !result.stderr.includes(CHERRYPICK_EMPTY)) {
+        throw new Error(`Unexpected error: ${result.stderr}`)
+      }
     }
-
-    else if (result.exitCode !== 0 && !result.stderr.includes(CHERRYPICK_EMPTY)) {
-      throw new Error(`Unexpected error: ${result.stderr}`)
+    catch (err: unknown) {
+      if (err.includes(CHERRYPICK_CONFLICT)) {
+        core.info(`Cherry pick finished with conflicts, committing anyway`)
+        await gitExecution(['add', '*'])
+        await gitExecution(['commit', '-m', 'Cherry picking with conflicts'])
+      }
+      else if (err instanceof Error) {
+        core.setFailed(err)
+      }
     }
     core.endGroup()
 
