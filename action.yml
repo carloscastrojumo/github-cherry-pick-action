@@ -54,7 +54,7 @@ inputs:
     description: "Forcefully push the branch to remote branch"
     required: false
 runs:
-  using: node16
+  using: node20
   main: dist/index.js
 branding:
   icon: 'git-pull-request'
