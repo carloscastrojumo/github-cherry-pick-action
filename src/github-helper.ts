@@ -1,6 +1,6 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
-import {PullRequest} from '@octokit/webhooks-definitions/schema'
+import {PullRequest} from '@octokit/webhooks-types'
 
 const ERROR_PR_REVIEW_FROM_AUTHOR =
   'Review cannot be requested from pull request author'
@@ -50,7 +50,7 @@ export async function createPullRequest(
     core.info(`Input body is '${inputs.body}'`)
     let body = inputs.body
     if (body === undefined || body === '') {
-      body = pull_request.body
+      body = pull_request.body || undefined
     } else {
       // if the body comes from inputs, we replace {old_pull_request_id}
       // to make it easy to reference the previous pull request in the new

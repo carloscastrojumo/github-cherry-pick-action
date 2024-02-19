@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import {run} from '../src/index'
 import {createPullRequest} from '../src/github-helper'
-import { PullRequest } from '@octokit/webhooks-definitions/schema'
+import { PullRequest } from '@octokit/webhooks-types'
 
 const defaultMockedGetInputData: any = {
   token: 'whatever',
