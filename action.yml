@@ -1,5 +1,5 @@
 name: "GitHub cherry pick action"
-description: "GitHub action for cherry pick commits from Pull Requests into Release branchs"
+description: "GitHub action for cherry pick commits from Pull Requests into Release branches"
 inputs:
   token:
     description: "GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)"
@@ -54,7 +54,7 @@ inputs:
     description: "Forcefully push the branch to remote branch"
     required: false
 runs:
-  using: node16
+  using: node20
   main: dist/index.js
 branding:
   icon: 'git-pull-request'
