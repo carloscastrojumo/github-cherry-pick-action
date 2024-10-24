@@ -1,10 +1,10 @@
 import * as core from '@actions/core'
-import * as io from '@actions/io'
 import * as exec from '@actions/exec'
-import * as utils from './utils'
 import * as github from '@actions/github'
-import {Inputs, createPullRequest} from './github-helper'
-import {PullRequest} from '@octokit/webhooks-types'
+import * as io from '@actions/io'
+import { PullRequest } from '@octokit/webhooks-types'
+import { Inputs, createPullRequest } from './github-helper'
+import * as utils from './utils'
 
 const CHERRYPICK_EMPTY =
   'The previous cherry-pick is now empty, possibly due to conflict resolution.'
@@ -24,7 +24,8 @@ export async function run(): Promise<void> {
       assignees: utils.getInputAsArray('assignees'),
       reviewers: utils.getInputAsArray('reviewers'),
       teamReviewers: utils.getInputAsArray('team-reviewers'),
-      cherryPickBranch: core.getInput('cherry-pick-branch')
+      cherryPickBranch: core.getInput('cherry-pick-branch'),
+      strategyOption: core.getInput('strategy-option')
     }
 
     core.info(`Cherry pick into branch ${inputs.branch}!`)
@@ -71,7 +72,7 @@ export async function run(): Promise<void> {
       '-m',
       '1',
       '--strategy=recursive',
-      '--strategy-option=theirs',
+      `--strategy-option=${inputs.strategyOption ?? 'theirs'}`,
       `${githubSha}`
     ])
     if (result.exitCode !== 0 && !result.stderr.includes(CHERRYPICK_EMPTY)) {
