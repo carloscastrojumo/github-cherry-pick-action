@@ -5,6 +5,16 @@ import {PullRequest} from '@octokit/webhooks-types'
 const ERROR_PR_REVIEW_FROM_AUTHOR =
   'Review cannot be requested from pull request author'
 
+interface EnableAutoMergeResponse {
+  enablePullRequestAutoMerge: {
+    pullRequest: {
+      number: number
+      mergeStateStatus: string
+      isInMergeQueue: boolean
+    }
+  }
+}
+
 export interface Inputs {
   token: string
   committer: string
@@ -135,6 +145,43 @@ export async function createPullRequest(
         }
       }
     }
+
+    // Enable auto-merge with REBASE
+    try {
+      core.info('Enabling auto-merge with REBASE method')
+      const mergeMethod = 'REBASE'
+      const response = await octokit.graphql<EnableAutoMergeResponse>(
+        `
+        mutation ($pullRequestId: ID!, $mergeMethod: PullRequestMergeMethod!) {
+          enablePullRequestAutoMerge(
+            input: { pullRequestId: $pullRequestId, mergeMethod: $mergeMethod }
+          ) {
+            pullRequest {
+              number
+              mergeStateStatus
+              isInMergeQueue
+            }
+          }
+        }
+        `,
+        {
+          pullRequestId: pull.data.node_id,
+          mergeMethod
+        }
+      )
+
+      const info = response.enablePullRequestAutoMerge.pullRequest
+      core.info(
+        `Auto-merge enabled for PR #${info.number}. Merge state: ${info.mergeStateStatus}, In merge queue: ${info.isInMergeQueue}`
+      )
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        core.warning(`Failed to enable auto-merge: ${e.message}`)
+      } else {
+        core.warning('Failed to enable auto-merge: Unknown error')
+      }
+    }
+
     return pull
   }
 }
