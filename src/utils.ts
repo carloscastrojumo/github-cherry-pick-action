@@ -13,7 +13,7 @@ export function getInputAsBoolean(
 ): boolean | undefined {
   try {
     return JSON.parse(core.getInput(name, options))
-  } catch (e) {
+  } catch (_e) {
     return undefined
   }
 }

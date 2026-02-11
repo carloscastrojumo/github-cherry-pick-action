@@ -2,8 +2,8 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import * as github from '@actions/github'
 import * as io from '@actions/io'
-import { PullRequest } from '@octokit/webhooks-types'
-import { Inputs, createPullRequest } from './github-helper'
+import {PullRequest} from '@octokit/webhooks-types'
+import {Inputs, createPullRequest} from './github-helper'
 import * as utils from './utils'
 
 const CHERRYPICK_EMPTY =
