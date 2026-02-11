@@ -74,7 +74,7 @@ describe('run main', () => {
   })
 
   const commonChecks = (targetBranch: string, cherryPickBranch: string) => {
-    expect(core.startGroup).toBeCalledTimes(6)
+    expect(core.startGroup).toHaveBeenCalledTimes(6)
     expect(core.startGroup).toHaveBeenCalledWith(
       'Configuring the committer and author'
     )
@@ -86,13 +86,13 @@ describe('run main', () => {
     expect(core.startGroup).toHaveBeenCalledWith('Push new branch to remote')
     expect(core.startGroup).toHaveBeenCalledWith('Opening pull request')
 
-    expect(core.endGroup).toBeCalledTimes(6)
+    expect(core.endGroup).toHaveBeenCalledTimes(6)
 
     // TODO check params
-    expect(exec.exec).toBeCalledTimes(7)
+    expect(exec.exec).toHaveBeenCalledTimes(7)
 
     // TODO check params
-    expect(createPullRequest).toBeCalledTimes(1)
+    expect(createPullRequest).toHaveBeenCalledTimes(1)
   }
 
   test('valid execution with default new branch', async () => {
